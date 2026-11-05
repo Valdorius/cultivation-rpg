@@ -13,6 +13,78 @@ class GameUI {
     }
   }
 
+  attachLongPress(el, onLongPress, onClick) {
+    let timer = null;
+    let isLongPress = false;
+    let startX = 0;
+    let startY = 0;
+
+    const start = (e) => {
+      isLongPress = false;
+      const touch = e.touches ? e.touches[0] : e;
+      startX = touch.clientX;
+      startY = touch.clientY;
+      el.classList.add('holding-press');
+      timer = setTimeout(() => {
+        isLongPress = true;
+        el.classList.remove('holding-press');
+        if (navigator.vibrate) navigator.vibrate(35);
+        if (onLongPress) onLongPress(e);
+      }, 420);
+    };
+
+    const clear = () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      el.classList.remove('holding-press');
+    };
+
+    const move = (e) => {
+      const touch = e.touches ? e.touches[0] : e;
+      if (Math.abs(touch.clientX - startX) > 12 || Math.abs(touch.clientY - startY) > 12) {
+        clear();
+      }
+    };
+
+    const end = (e) => {
+      const wasLong = isLongPress;
+      clear();
+      if (!wasLong && onClick) {
+        onClick(e);
+      }
+    };
+
+    el.addEventListener('touchstart', start, { passive: true });
+    el.addEventListener('touchmove', move, { passive: true });
+    el.addEventListener('touchend', end);
+    el.addEventListener('touchcancel', clear);
+
+    el.addEventListener('mousedown', start);
+    el.addEventListener('mousemove', move);
+    el.addEventListener('mouseup', end);
+    el.addEventListener('mouseleave', clear);
+    el.addEventListener('contextmenu', (e) => e.preventDefault());
+  }
+
+  showInspector(title, subtitle, description, detailsHtml = '') {
+    const modal = document.getElementById('inspect-modal');
+    if (!modal) return;
+    document.getElementById('inspect-title').textContent = title;
+    document.getElementById('inspect-subtitle').textContent = subtitle;
+    document.getElementById('inspect-body').innerHTML = description;
+    const det = document.getElementById('inspect-details');
+    if (detailsHtml) {
+      det.innerHTML = detailsHtml;
+      det.style.display = 'block';
+    } else {
+      det.style.display = 'none';
+    }
+    sfx.playClick();
+    modal.classList.add('active');
+  }
+
   showCreationModal() {
     const modal = document.getElementById('creation-modal');
     if (!modal) return;
@@ -22,32 +94,65 @@ class GameUI {
 
     const origContainer = document.getElementById('creation-origins-list');
     if (origContainer) {
-      let origHtml = '';
+      origContainer.innerHTML = '';
       ORIGINS.forEach(o => {
         const active = this.selectedOrigin === o.id;
-        origHtml += `
-          <div class="method-btn ${active ? 'active' : ''}" id="orig-btn-${o.id}" onclick="ui.selectOrigin('${o.id}')" style="cursor: pointer; padding: 10px;">
-            <h5 style="color: var(--gold); font-size: 0.85rem; margin-bottom: 3px;">${o.name}</h5>
-            <p style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.3;">${o.desc}</p>
+        const card = document.createElement('div');
+        card.className = `method-btn ${active ? 'active' : ''}`;
+        card.id = `orig-btn-${o.id}`;
+        card.innerHTML = `
+          <h5>
+            <span>${o.name}</span>
+            <span class="hold-hint">Удерживайте ℹ️</span>
+          </h5>
+          <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">
+            Тап: выбрать • Зажатие: описание
           </div>
         `;
+
+        this.attachLongPress(
+          card,
+          () => {
+            const stats = `
+              <strong>Стартовые бонусы:</strong> ${o.bonusAttack ? `Атака +${o.bonusAttack}, ` : ''}${o.lifespanBonus ? `Долголетие +${o.lifespanBonus} лет, ` : ''}${o.demonBonus ? `Демоны Сердца +${o.demonBonus}, ` : ''}предметы в кольце.
+            `;
+            this.showInspector(o.name, 'Происхождение и Судьба', o.desc, stats);
+          },
+          () => this.selectOrigin(o.id)
+        );
+
+        origContainer.appendChild(card);
       });
-      origContainer.innerHTML = origHtml;
     }
 
     const pathContainer = document.getElementById('creation-paths-list');
     if (pathContainer) {
-      let pathHtml = '';
+      pathContainer.innerHTML = '';
       DAO_PATHS.forEach(p => {
         const active = this.selectedDaoPath === p.id;
-        pathHtml += `
-          <div class="method-btn ${active ? 'active' : ''}" id="path-btn-${p.id}" onclick="ui.selectDaoPath('${p.id}')" style="cursor: pointer; padding: 10px;">
-            <h5 style="color: var(--jade); font-size: 0.85rem; margin-bottom: 3px;">${p.name}</h5>
-            <p style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.3;">${p.desc}</p>
+        const card = document.createElement('div');
+        card.className = `method-btn ${active ? 'active' : ''}`;
+        card.id = `path-btn-${p.id}`;
+        card.innerHTML = `
+          <h5>
+            <span>${p.name}</span>
+            <span class="hold-hint">Удерживайте ℹ️</span>
+          </h5>
+          <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">
+            Тап: выбрать • Зажатие: описание
           </div>
         `;
+
+        this.attachLongPress(
+          card,
+          () => {
+            this.showInspector(p.name, 'Путь Дао', p.desc, 'Определяет ваш стиль культивации, отношение сект и уникальные боевые бонусы.');
+          },
+          () => this.selectDaoPath(p.id)
+        );
+
+        pathContainer.appendChild(card);
       });
-      pathContainer.innerHTML = pathHtml;
     }
 
     modal.classList.add('active');
@@ -206,7 +311,14 @@ class GameUI {
     const rootEl = document.getElementById('stat-root');
     if (rootEl) {
       rootEl.textContent = root.name;
-      rootEl.title = root.description;
+      rootEl.style.cursor = 'pointer';
+      rootEl.onclick = () => {
+        this.showInspector(root.name, 'Духовный Корень', root.description, `
+          • Множитель Ци: <span style="color: var(--jade);">${root.qiMultiplier}x</span><br>
+          • Бонус прорыва: <span style="color: ${root.breakthroughBonus >= 0 ? 'var(--jade)' : 'var(--crimson)'};">${root.breakthroughBonus >= 0 ? '+' : ''}${Math.round(root.breakthroughBonus * 100)}%</span><br>
+          • Редкость таланта: ${root.rarity}
+        `);
+      };
     }
 
     // Боевая мощь (Атака / Защита / ОЗ)
@@ -265,17 +377,41 @@ class GameUI {
     const container = document.getElementById('methods-selector');
     if (!container) return;
 
-    let html = '';
+    container.innerHTML = '';
     CULTIVATION_METHODS.forEach(m => {
       const active = gameEngine.player.cultivationMethod === m.id;
-      html += `
-        <div class="method-btn ${active ? 'active' : ''}" onclick="ui.selectMethod('${m.id}')">
-          <h5>${m.name}</h5>
-          <p>${m.desc}</p>
+      const card = document.createElement('div');
+      card.className = `method-btn ${active ? 'active' : ''}`;
+      card.id = `method-btn-${m.id}`;
+      card.innerHTML = `
+        <h5>
+          <span>${m.name}</span>
+          <span class="hold-hint">ℹ️</span>
+        </h5>
+        <div style="font-size: 0.68rem; color: var(--jade); display: flex; justify-content: space-between; margin-top: 2px;">
+          <span>${m.qiMod}x Ци</span>
+          <span style="color: var(--text-muted);">Зажать для инфо</span>
         </div>
       `;
+
+      this.attachLongPress(
+        card,
+        () => {
+          const stats = `
+            <strong>Характеристики потока Ци:</strong><br>
+            • Множитель Ци: <span style="color: var(--jade);">${m.qiMod}x</span><br>
+            • Время шага медитации: ${m.timeMonths} мес.<br>
+            ${m.dangerChance ? `• <span style="color: var(--crimson);">Риск травмы меридианов: ${Math.round(m.dangerChance * 100)}%</span><br>` : ''}
+            ${m.healChance ? `• <span style="color: var(--jade);">Шанс исцеления травм: ${Math.round(m.healChance * 100)}%</span><br>` : ''}
+            ${m.insightChance ? `• <span style="color: var(--gold);">Шанс Озарения Дао (+Атака/+Защита навсегда): ${Math.round(m.insightChance * 100)}%</span>` : ''}
+          `;
+          this.showInspector(m.name, 'Метод циркуляции Ци', m.desc, stats);
+        },
+        () => this.selectMethod(m.id)
+      );
+
+      container.appendChild(card);
     });
-    container.innerHTML = html;
   }
 
   selectMethod(methodId) {

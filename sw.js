@@ -1,13 +1,13 @@
-const CACHE_NAME = 'cultivation-rpg-v2-2';
+const CACHE_NAME = 'cultivation-rpg-v2-3';
 const ASSETS = [
   './',
-  './index.html?v=2.2',
-  './styles.css?v=2.2',
+  './index.html?v=2.3',
+  './styles.css?v=2.3',
   './manifest.json',
-  './js/data.js?v=2.2',
-  './js/audio.js?v=2.2',
-  './js/game.js?v=2.2',
-  './js/ui.js?v=2.2'
+  './js/data.js?v=2.3',
+  './js/audio.js?v=2.3',
+  './js/game.js?v=2.3',
+  './js/ui.js?v=2.3'
 ];
 
 self.addEventListener('install', (e) => {
@@ -25,7 +25,7 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
-// Network-First стратегия: всегда берем свежую версию из сети, при отсутствии интернета — из кеша
+// Network-First стратегия
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(e.request)
