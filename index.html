@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Путь к Бессмертию: Сянься RPG</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="styles.css?v=2.3">
+  <link rel="stylesheet" href="styles.css?v=2.4">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
 </head>
 <body>
@@ -30,27 +30,30 @@
     
     <!-- Вкладка 1: Культивация и Дао -->
     <section id="tab-cultivation" class="tab-pane active">
-      <div class="card">
+      <div class="card" style="margin-bottom: 4px;">
         <div class="cultivator-info">
           <div class="avatar-ring">☯️</div>
           <div class="cultivator-meta">
-            <h2 id="player-name">Хань Ли</h2>
-            <div id="player-realm" class="realm-badge">Закалка Тела: 1-й слой</div>
+            <div>
+              <h2 id="player-name">Хань Ли</h2>
+              <span id="player-realm" class="realm-badge">Закалка: 1-й слой</span>
+            </div>
+            <span id="player-sect-badge" style="font-size: 0.65rem; color: var(--gold); font-weight: 600;">Слуга</span>
           </div>
         </div>
 
         <div class="stats-grid">
           <div class="stat-item">
-            <div class="stat-label">⏳ Долголетие</div>
-            <div id="stat-lifespan" class="stat-value">16 / 70 лет</div>
+            <div class="stat-label">⏳ Жизнь</div>
+            <div id="stat-lifespan" class="stat-value">16/70 л</div>
+          </div>
+          <div class="stat-item" style="cursor: pointer;">
+            <div class="stat-label">🌱 Корень ℹ️</div>
+            <div id="stat-root" class="stat-value gold">-</div>
           </div>
           <div class="stat-item">
-            <div class="stat-label">🌱 Духовный Корень</div>
-            <div id="stat-root" class="stat-value gold" style="font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-label">⚔️ Боевая Мощь</div>
-            <div id="stat-combat" class="stat-value gold">⚔️ 15 | 🛡️ 5</div>
+            <div class="stat-label">⚔️ Мощь</div>
+            <div id="stat-combat" class="stat-value gold">15 | 5</div>
           </div>
           <div class="stat-item">
             <div class="stat-label">⚡ Меридианы</div>
@@ -62,7 +65,7 @@
         <div class="progress-container">
           <div class="progress-header">
             <span style="color: var(--crimson); font-weight: 600;">Жизненная сила (ОЗ)</span>
-            <span id="hp-text">100 / 100 ОЗ</span>
+            <span id="hp-text">100 / 100</span>
           </div>
           <div class="progress-bar-bg">
             <div id="hp-fill" class="progress-bar-fill hp-bar-fill" style="width: 100%;"></div>
@@ -81,9 +84,10 @@
         </div>
 
         <!-- Выбор метода циркуляции Ци в меридианах -->
-        <div style="margin-top: 10px;">
-          <div style="font-size: 0.8rem; color: var(--gold); font-weight: 600; margin-bottom: 4px;">
-            🌀 Метод циркуляции Ци в меридианах:
+        <div style="margin-top: 4px;">
+          <div style="font-size: 0.68rem; color: var(--gold); font-weight: 600; display: flex; justify-content: space-between;">
+            <span>🌀 Метод циркуляции:</span>
+            <span style="font-size: 0.58rem; color: var(--text-muted);">Зажмите для инфо ℹ️</span>
           </div>
           <div class="methods-selector" id="methods-selector"></div>
         </div>
@@ -91,17 +95,17 @@
         <!-- Кнопки управления медитацией -->
         <div class="action-grid">
           <button id="btn-meditate" class="btn-primary">
-            <span>🧘</span> Направить поток Ци
+            <span>🧘</span> Медитация
           </button>
           <button id="btn-auto-meditate" class="btn-primary">
-            <span>⚡</span> Авто-поток Ци
+            <span>⚡</span> Авто-поток
           </button>
         </div>
 
         <!-- Прорыв -->
-        <div style="margin-top: 12px; text-align: center;">
+        <div style="margin-top: 5px; text-align: center;">
           <button id="btn-breakthrough" class="btn-primary btn-gold" style="width: 100%;">
-            <span>⚡</span> Преодолеть Узкое Место (Шанс: <span id="breakthrough-chance">70%</span>)
+            <span>⚡</span> Прорыв (<span id="breakthrough-chance">70%</span>)
           </button>
         </div>
       </div>
@@ -296,10 +300,10 @@
     </div>
   </div>
 
-  <!-- Скрипты с cache-busting v2.3 -->
-  <script src="js/data.js?v=2.3"></script>
-  <script src="js/audio.js?v=2.3"></script>
-  <script src="js/game.js?v=2.3"></script>
-  <script src="js/ui.js?v=2.3"></script>
+  <!-- Скрипты с cache-busting v2.4 -->
+  <script src="js/data.js?v=2.4"></script>
+  <script src="js/audio.js?v=2.4"></script>
+  <script src="js/game.js?v=2.4"></script>
+  <script src="js/ui.js?v=2.4"></script>
 </body>
 </html>

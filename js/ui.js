@@ -295,22 +295,27 @@ class GameUI {
 
     // Шапка и профиль
     document.getElementById('player-name').textContent = p.name;
-    document.getElementById('player-realm').textContent = `${realm.name} (${sectRank.title})`;
+    document.getElementById('player-realm').textContent = realm.name;
     document.getElementById('player-realm').style.borderColor = realm.color;
     document.getElementById('player-realm').style.color = realm.color;
 
-    // Долголетие
+    const sectBadge = document.getElementById('player-sect-badge');
+    if (sectBadge) sectBadge.textContent = sectRank.title;
+
+    // Долголетие (компактно: 16/70 л)
     const lifespanEl = document.getElementById('stat-lifespan');
     if (lifespanEl) {
       const remaining = p.maxLifespanYears - p.ageYears;
-      lifespanEl.textContent = `${p.ageYears} лет / макс. ${p.maxLifespanYears} (${remaining} осталось)`;
+      lifespanEl.textContent = `${p.ageYears}/${p.maxLifespanYears} л`;
+      lifespanEl.title = `Осталось жить: ${remaining} лет`;
       lifespanEl.className = remaining <= 5 ? 'stat-value danger' : 'stat-value';
     }
 
-    // Духовный корень
+    // Духовный корень (компактно)
     const rootEl = document.getElementById('stat-root');
     if (rootEl) {
-      rootEl.textContent = root.name;
+      const shortRootName = root.name.replace('Духовный Корень', '').replace('Корень', '').trim();
+      rootEl.textContent = shortRootName.length > 12 ? shortRootName.substring(0, 11) + '…' : shortRootName;
       rootEl.style.cursor = 'pointer';
       rootEl.onclick = () => {
         this.showInspector(root.name, 'Духовный Корень', root.description, `
@@ -321,23 +326,18 @@ class GameUI {
       };
     }
 
-    // Боевая мощь (Атака / Защита / ОЗ)
+    // Боевая мощь (Атака / Защита)
     const hpEl = document.getElementById('stat-combat');
     if (hpEl) {
-      hpEl.textContent = `⚔️ ${gameEngine.attack} | 🛡️ ${gameEngine.defense}`;
+      hpEl.textContent = `${gameEngine.attack} | ${gameEngine.defense}`;
     }
 
-    // Меридианы и Демоны
+    // Меридианы (компактно)
     const meridianEl = document.getElementById('stat-meridians');
     if (meridianEl) {
-      meridianEl.textContent = `${100 - (p.meridianDamage || 0)}% (Травмы: ${p.meridianDamage || 0}%)`;
-      meridianEl.className = p.meridianDamage > 25 ? 'stat-value danger' : 'stat-value jade';
-    }
-
-    const demonsEl = document.getElementById('stat-demons');
-    if (demonsEl) {
-      demonsEl.textContent = `${p.demonsOfHeart || 0} / 100`;
-      demonsEl.className = p.demonsOfHeart > 40 ? 'stat-value danger' : 'stat-value';
+      const dmg = p.meridianDamage || 0;
+      meridianEl.textContent = dmg > 0 ? `${100 - dmg}% (-${dmg}%)` : '100%';
+      meridianEl.className = dmg > 25 ? 'stat-value danger' : 'stat-value jade';
     }
 
     // Шкала Даньтяня (Ци)
