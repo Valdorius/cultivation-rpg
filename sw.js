@@ -1,19 +1,16 @@
-const CACHE_NAME = 'cultivation-rpg-v1';
+const CACHE_NAME = 'cultivation-rpg-v2-2';
 const ASSETS = [
   './',
-  './index.html',
-  './styles.css',
+  './index.html?v=2.2',
+  './styles.css?v=2.2',
   './manifest.json',
-  './js/data.js',
-  './js/audio.js',
-  './js/game.js',
-  './js/ui.js'
+  './js/data.js?v=2.2',
+  './js/audio.js?v=2.2',
+  './js/game.js?v=2.2',
+  './js/ui.js?v=2.2'
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
   self.skipWaiting();
 });
 
@@ -28,8 +25,17 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
+// Network-First стратегия: всегда берем свежую версию из сети, при отсутствии интернета — из кеша
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then((res) => res || fetch(e.request))
+    fetch(e.request)
+      .then((networkRes) => {
+        if (networkRes && networkRes.status === 200) {
+          const resClone = networkRes.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, resClone));
+        }
+        return networkRes;
+      })
+      .catch(() => caches.match(e.request))
   );
 });

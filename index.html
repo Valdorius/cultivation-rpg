@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Путь к Бессмертию: Сянься RPG</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2.2">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
 </head>
 <body>
@@ -233,6 +233,41 @@
     </div>
   </div>
 
+  <!-- Модальное окно выбора судьбы и происхождения (Создание персонажа) -->
+  <div id="creation-modal" class="modal-overlay">
+    <div class="modal-content" style="max-height: 90vh; overflow-y: auto; text-align: left; padding: 16px;">
+      <h3 style="color: var(--gold); text-align: center; margin-bottom: 6px;">☯️ Колесо Реинкарнации</h3>
+      <p style="font-size: 0.78rem; color: var(--text-secondary); text-align: center; margin-bottom: 12px;">
+        Выберите имя, прошлое происхождение и путь Дао для нового воплощения в мире бессмертных.
+      </p>
+
+      <!-- Имя -->
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.78rem; color: var(--gold); font-weight: 600;">Даосское имя:</label>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <input type="text" id="creation-name-input" value="Хань Ли" style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem;">
+          <button class="btn-small" onclick="ui.generateRandomName()">🎲 Случайно</button>
+        </div>
+      </div>
+
+      <!-- Выбор Происхождения -->
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.78rem; color: var(--gold); font-weight: 600;">Происхождение и Судьба:</label>
+        <div id="creation-origins-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;"></div>
+      </div>
+
+      <!-- Выбор Пути Дао -->
+      <div style="margin-bottom: 14px;">
+        <label style="font-size: 0.78rem; color: var(--gold); font-weight: 600;">Путь Дао:</label>
+        <div id="creation-paths-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;"></div>
+      </div>
+
+      <button class="btn-primary btn-gold" style="width: 100%; padding: 12px;" onclick="ui.confirmCreation()">
+        <span>⚡</span> Ступить на Путь к Бессмертию!
+      </button>
+    </div>
+  </div>
+
   <!-- Модальное окно событий и трибуляций -->
   <div id="game-modal" class="modal-overlay">
     <div class="modal-content">
@@ -243,10 +278,10 @@
     </div>
   </div>
 
-  <!-- Скрипты -->
-  <script src="js/data.js"></script>
-  <script src="js/audio.js"></script>
-  <script src="js/game.js"></script>
-  <script src="js/ui.js"></script>
+  <!-- Скрипты с cache-busting v2.2 -->
+  <script src="js/data.js?v=2.2"></script>
+  <script src="js/audio.js?v=2.2"></script>
+  <script src="js/game.js?v=2.2"></script>
+  <script src="js/ui.js?v=2.2"></script>
 </body>
 </html>

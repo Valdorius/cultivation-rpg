@@ -16,17 +16,21 @@ class CultivationGame {
       try {
         this.player = JSON.parse(saved);
         this.ensureV2Properties();
+        this.needsCreation = false;
       } catch (e) {
         console.error('Ошибка загрузки сохранения v2, создаем заново', e);
-        this.createNewCharacter();
+        this.needsCreation = true;
       }
     } else {
-      this.createNewCharacter();
+      this.needsCreation = true;
     }
   }
 
   ensureV2Properties() {
     const p = this.player;
+    if (!p) return;
+    if (!p.originId) p.originId = 'origin_shepherd';
+    if (!p.daoPathId) p.daoPathId = 'dao_orthodox';
     if (!p.learnedTechniques) p.learnedTechniques = ['tech_slash'];
     if (!p.equippedTechniqueId) p.equippedTechniqueId = 'tech_slash';
     if (!p.cultivationMethod) p.cultivationMethod = 'standard';
@@ -38,43 +42,46 @@ class CultivationGame {
     if (p.currentHp === undefined) p.currentHp = this.maxHp;
   }
 
-  createNewCharacter(name = 'Хань Ли') {
-    const rootRoll = Math.random();
-    let root = SPIRIT_ROOTS[0]; // Мусорный по умолчанию
-    if (rootRoll > 0.95) root = SPIRIT_ROOTS[5]; // Мутировавший молниеносный
-    else if (rootRoll > 0.85) root = SPIRIT_ROOTS[4]; // Небесный огонь
-    else if (rootRoll > 0.65) root = SPIRIT_ROOTS[3]; // Двойной чистый
-    else if (rootRoll > 0.40) root = SPIRIT_ROOTS[2]; // Истинный 3 стихий
-    else if (rootRoll > 0.20) root = SPIRIT_ROOTS[1]; // 4 стихии
+  createCustomCharacter(name, originId, daoPathId, chosenRootId) {
+    const origin = ORIGINS.find(o => o.id === originId) || ORIGINS[0];
+    const daoPath = DAO_PATHS.find(d => d.id === daoPathId) || DAO_PATHS[0];
+    let root = SPIRIT_ROOTS.find(r => r.id === chosenRootId);
+    if (!root) {
+      const rootRoll = Math.random();
+      root = SPIRIT_ROOTS[0];
+      if (rootRoll > 0.95) root = SPIRIT_ROOTS[5];
+      else if (rootRoll > 0.85) root = SPIRIT_ROOTS[4];
+      else if (rootRoll > 0.65) root = SPIRIT_ROOTS[3];
+      else if (rootRoll > 0.40) root = SPIRIT_ROOTS[2];
+      else if (rootRoll > 0.20) root = SPIRIT_ROOTS[1];
+    }
+
+    const startInventory = { ...origin.bonusInventory };
+    const startTechs = [...origin.bonusTechniques];
 
     this.player = {
-      name: name,
+      name: name || 'Хань Ли',
+      originId: origin.id,
+      daoPathId: daoPath.id,
       ageYears: 16,
       ageMonths: 0,
-      maxLifespanYears: 70,
+      maxLifespanYears: 70 + (origin.lifespanBonus || 0),
       realmIndex: 0,
       spiritRootId: root.id,
       qi: 0,
       currentHp: 100,
       meridianDamage: 0,
-      demonsOfHeart: 0,
-      breakthroughBonus: 0,
-      bonusAttack: 0,
-      bonusDefense: 0,
+      demonsOfHeart: origin.demonBonus || 0,
+      breakthroughBonus: daoPath.id === 'dao_orthodox' ? 0.15 : 0,
+      bonusAttack: (origin.bonusAttack || 0) + (daoPath.id === 'dao_demonic' ? 20 : 0),
+      bonusDefense: origin.bonusDefense || 0,
       cultivationMethod: 'standard',
       sectRankId: 0,
       arenaScore: 0,
       defeatedOpponents: [],
-      learnedTechniques: ['tech_slash'],
-      equippedTechniqueId: 'tech_slash',
-      inventory: {
-        stone_spirit: 25,
-        herb_spirit: 6,
-        herb_ginseng: 3,
-        herb_lotus: 1,
-        pill_qi: 2,
-        pill_purify: 1
-      },
+      learnedTechniques: startTechs,
+      equippedTechniqueId: startTechs[0] || 'tech_slash',
+      inventory: startInventory,
       stats: {
         meditationsCount: 0,
         successfulBreakthroughs: 0,
@@ -86,11 +93,16 @@ class CultivationGame {
         {
           year: 16,
           month: 1,
-          text: `Вам исполнилось 16 лет. При проверке таланта пробудился ${root.name}. Вы приняты чернорабочим слугой в Секту Лазурного Облака!`
+          text: `Выбрана судьба: «${origin.name}». Избран путь: «${daoPath.name}» с корнем ${root.name}. Да начнется ваш Путь к Бессмертию!`
         }
       ]
     };
+    this.needsCreation = false;
     this.save();
+  }
+
+  createNewCharacter(name = 'Хань Ли') {
+    this.createCustomCharacter(name, 'origin_shepherd', 'dao_orthodox', null);
   }
 
   get currentRealm() {
@@ -631,7 +643,9 @@ class CultivationGame {
     this.activeCombat = null;
     this.activeAuction = null;
     localStorage.removeItem('cultivation_save_v2');
-    this.createNewCharacter();
+    this.player = null;
+    this.needsCreation = true;
+    if (ui) ui.showCreationModal();
   }
 }
 

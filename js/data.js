@@ -45,6 +45,68 @@ const REALMS = [
   { id: 'ascended', name: 'Истинный Бессмертный (Вознесение)', baseQiNeeded: 99999999, lifespanGain: 99999, tribulation: { strikes: 12, baseDamage: 999, name: 'Скорбь Раскрытия Врат Бессмертных' }, hp: 2500000, attack: 999999, defense: 888888, color: '#e74c3c' }
 ];
 
+// Происхождения персонажа (выбор судьбы при старте)
+const ORIGINS = [
+  {
+    id: 'origin_shepherd',
+    name: '🌿 Пастух с Таинственным Зеленым Флаконом',
+    desc: 'Бедный крестьянский юноша, случайно нашедший в ущелье артефакт, ускоряющий рост трав. Стартовый бонус: +10 трав, 3 пилюли и талант к алхимии.',
+    bonusInventory: { herb_spirit: 10, herb_ginseng: 6, herb_lotus: 3, pill_qi: 3, stone_spirit: 30 },
+    bonusTechniques: ['tech_slash'],
+    lifespanBonus: 0,
+    demonBonus: 0
+  },
+  {
+    id: 'origin_noble',
+    name: '⚔️ Опальный Наследник Клана Мечников',
+    desc: 'Ваш клан был уничтожен врагами, но вы унаследовали фамильный клинок и родовые секреты. Стартовый бонус: 80 духовных камней, +25 к базовой Атаке и техника «Лазурный Клинок».',
+    bonusInventory: { stone_spirit: 80, pill_qi: 2, pill_purify: 1 },
+    bonusTechniques: ['tech_slash', 'tech_shield'],
+    bonusAttack: 25,
+    lifespanBonus: 0,
+    demonBonus: 0
+  },
+  {
+    id: 'origin_demon',
+    name: '💀 Перерожденный Демонический Старейшина',
+    desc: 'Ваша прошлая оболочка погибла от небесной кары, но душа захватила новое молодое тело. Стартовый бонус: Запретная техника «Пожирание Крови» и +50 к сбору Ци, но груз темной кармы (+25 к Демонам Сердца).',
+    bonusInventory: { stone_spirit: 50, herb_spirit: 5, pill_qi: 2 },
+    bonusTechniques: ['tech_blood_drain', 'tech_slash'],
+    bonusAttack: 40,
+    lifespanBonus: -10,
+    demonBonus: 25
+  },
+  {
+    id: 'origin_monk',
+    name: '🧘 Смиренный Странствующий Монах',
+    desc: 'Годы медитаций на горных вершинах закалили ваш дух и продлили годы жизни. Стартовый бонус: +35 лет к максимальному долголетию, кристально чистые меридианы и сопротивление Скорби.',
+    bonusInventory: { stone_spirit: 40, herb_lotus: 4, pill_heart_calm: 2 },
+    bonusTechniques: ['tech_slash', 'tech_shield'],
+    lifespanBonus: 35,
+    bonusDefense: 20,
+    demonBonus: 0
+  }
+];
+
+// Выбор Пути Дао
+const DAO_PATHS = [
+  {
+    id: 'dao_orthodox',
+    name: '🕊️ Праведное Дао (Ортодокс)',
+    desc: 'Следование законам Неба, гармония с природой. +15% к шансу прорывов, снижение урона от Небесной Скорби на 20%.'
+  },
+  {
+    id: 'dao_demonic',
+    name: '🩸 Демоническое Дао (Путь Крови)',
+    desc: 'Презрение к законам смертных и старейшин. +35% к урону всех боевых техник, вампиризм в бою, но повышенный риск встретить Демонов Сердца.'
+  },
+  {
+    id: 'dao_neutral',
+    name: '☯️ Дао Равновесия (Свободный Отшельник)',
+    desc: 'Баланс Инь и Ян, независимость от сект. +40% к наградам в экспедициях и на тайных аукционах.'
+  }
+];
+
 const SPIRIT_ROOTS = [
   {
     id: 'trash',

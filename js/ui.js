@@ -3,8 +3,89 @@
 class GameUI {
   constructor() {
     this.currentTab = 'cultivation';
+    this.selectedOrigin = 'origin_shepherd';
+    this.selectedDaoPath = 'dao_orthodox';
     this.initEventListeners();
+    if (gameEngine.needsCreation) {
+      this.showCreationModal();
+    } else {
+      this.render();
+    }
+  }
+
+  showCreationModal() {
+    const modal = document.getElementById('creation-modal');
+    if (!modal) return;
+
+    this.selectedOrigin = 'origin_shepherd';
+    this.selectedDaoPath = 'dao_orthodox';
+
+    const origContainer = document.getElementById('creation-origins-list');
+    if (origContainer) {
+      let origHtml = '';
+      ORIGINS.forEach(o => {
+        const active = this.selectedOrigin === o.id;
+        origHtml += `
+          <div class="method-btn ${active ? 'active' : ''}" id="orig-btn-${o.id}" onclick="ui.selectOrigin('${o.id}')" style="cursor: pointer; padding: 10px;">
+            <h5 style="color: var(--gold); font-size: 0.85rem; margin-bottom: 3px;">${o.name}</h5>
+            <p style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.3;">${o.desc}</p>
+          </div>
+        `;
+      });
+      origContainer.innerHTML = origHtml;
+    }
+
+    const pathContainer = document.getElementById('creation-paths-list');
+    if (pathContainer) {
+      let pathHtml = '';
+      DAO_PATHS.forEach(p => {
+        const active = this.selectedDaoPath === p.id;
+        pathHtml += `
+          <div class="method-btn ${active ? 'active' : ''}" id="path-btn-${p.id}" onclick="ui.selectDaoPath('${p.id}')" style="cursor: pointer; padding: 10px;">
+            <h5 style="color: var(--jade); font-size: 0.85rem; margin-bottom: 3px;">${p.name}</h5>
+            <p style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.3;">${p.desc}</p>
+          </div>
+        `;
+      });
+      pathContainer.innerHTML = pathHtml;
+    }
+
+    modal.classList.add('active');
+  }
+
+  selectOrigin(id) {
+    this.selectedOrigin = id;
+    document.querySelectorAll('#creation-origins-list .method-btn').forEach(el => el.classList.remove('active'));
+    const btn = document.getElementById(`orig-btn-${id}`);
+    if (btn) btn.classList.add('active');
+    sfx.playClick();
+  }
+
+  selectDaoPath(id) {
+    this.selectedDaoPath = id;
+    document.querySelectorAll('#creation-paths-list .method-btn').forEach(el => el.classList.remove('active'));
+    const btn = document.getElementById(`path-btn-${id}`);
+    if (btn) btn.classList.add('active');
+    sfx.playClick();
+  }
+
+  generateRandomName() {
+    const surnames = ['Хань', 'Линь', 'Ван', 'Сяо', 'Бай', 'Сунь', 'Чэнь', 'Е', 'Гу', 'Цзян'];
+    const names = ['Ли', 'Тянь', 'Мэн', 'Янь', 'Сяочунь', 'Укун', 'Сюань', 'Чэнь', 'Фань', 'Бай'];
+    const randomName = surnames[Math.floor(Math.random() * surnames.length)] + ' ' + names[Math.floor(Math.random() * names.length)];
+    const input = document.getElementById('creation-name-input');
+    if (input) input.value = randomName;
+    sfx.playClick();
+  }
+
+  confirmCreation() {
+    const input = document.getElementById('creation-name-input');
+    const name = input && input.value.trim() ? input.value.trim() : 'Хань Ли';
+    gameEngine.createCustomCharacter(name, this.selectedOrigin, this.selectedDaoPath, null);
+    document.getElementById('creation-modal').classList.remove('active');
+    sfx.playBreakthrough();
     this.render();
+    this.showToast(`Вы ступили в мир культивации как ${name}!`);
   }
 
   initEventListeners() {
@@ -65,14 +146,13 @@ class GameUI {
       });
     }
 
-    // Сброс
+    // Сброс и выбор новой судьбы
     const btnReset = document.getElementById('btn-reset');
     if (btnReset) {
       btnReset.addEventListener('click', () => {
-        if (confirm('Сбросить текущее воплощение и начать новую реинкарнацию в колесе Сансары?')) {
+        if (confirm('Сбросить текущее воплощение и открыть Колесо Реинкарнации для выбора новой судьбы?')) {
           gameEngine.reset();
-          this.render();
-          this.showToast('Вы возродились новым смертным в смертном мире!');
+          this.showCreationModal();
         }
       });
     }
