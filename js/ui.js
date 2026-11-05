@@ -367,6 +367,15 @@ class GameUI {
       chanceEl.className = chance >= 60 ? 'jade' : (chance < 40 ? 'danger' : 'gold');
     }
 
+    const btnBreakthrough = document.getElementById('btn-breakthrough');
+    if (btnBreakthrough) {
+      if (qiCurrent >= qiMax) {
+        btnBreakthrough.classList.add('btn-breakthrough-ready');
+      } else {
+        btnBreakthrough.classList.remove('btn-breakthrough-ready');
+      }
+    }
+
     // Рендер методов циркуляции
     this.renderCultivationMethods();
 

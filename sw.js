@@ -1,13 +1,13 @@
-const CACHE_NAME = 'cultivation-rpg-v2-4';
+const CACHE_NAME = 'cultivation-rpg-v2-5';
 const ASSETS = [
   './',
-  './index.html?v=2.4',
-  './styles.css?v=2.4',
+  './index.html?v=2.5',
+  './styles.css?v=2.5',
   './manifest.json',
-  './js/data.js?v=2.4',
-  './js/audio.js?v=2.4',
-  './js/game.js?v=2.4',
-  './js/ui.js?v=2.4'
+  './js/data.js?v=2.5',
+  './js/audio.js?v=2.5',
+  './js/game.js?v=2.5',
+  './js/ui.js?v=2.5'
 ];
 
 self.addEventListener('install', (e) => {
