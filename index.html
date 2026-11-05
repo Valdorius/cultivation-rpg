@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090d13">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Путь к Бессмертию: Сянься RPG</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+</head>
+<body>
+
+  <!-- Верхняя панель (Header) -->
+  <header class="app-header">
+    <div class="header-title">
+      <span class="kanji">修仙</span>
+      <span>Путь к Бессмертию</span>
+    </div>
+    <div class="header-actions">
+      <button id="btn-sound-toggle" class="btn-icon" title="Звуки Дао">🔊</button>
+      <button id="btn-reset" class="btn-icon" title="Сансара (Новое воплощение)">🔄</button>
+    </div>
+  </header>
+
+  <!-- Основная рабочая область -->
+  <main class="main-viewport">
+    
+    <!-- Вкладка 1: Культивация -->
+    <section id="tab-cultivation" class="tab-pane active">
+      <div class="card">
+        <div class="cultivator-info">
+          <div class="avatar-ring">☯️</div>
+          <div class="cultivator-meta">
+            <h2 id="player-name">Хань Ли</h2>
+            <div id="player-realm" class="realm-badge">Закалка Тела: 1-й слой</div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-label">⏳ Долголетие</div>
+            <div id="stat-lifespan" class="stat-value">16 / 70 лет</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">🌱 Духовный Корень</div>
+            <div id="stat-root" class="stat-value gold" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">⚡ Меридианы</div>
+            <div id="stat-meridians" class="stat-value jade">100%</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">😈 Демоны Сердца</div>
+            <div id="stat-demons" class="stat-value">0 / 100</div>
+          </div>
+        </div>
+
+        <!-- Даньтянь и поток Ци -->
+        <div class="progress-container">
+          <div class="progress-header">
+            <span style="color: var(--jade); font-weight: 600;">Поток Ци в Даньтяне</span>
+            <span id="qi-text">0 / 50 Ци (0%)</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="qi-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+
+        <!-- Кнопки управления медитацией -->
+        <div class="action-grid">
+          <button id="btn-meditate" class="btn-primary">
+            <span>🧘</span> Медитировать (1 мес.)
+          </button>
+          <button id="btn-auto-meditate" class="btn-primary">
+            <span>⚡</span> Авто-поток Ци
+          </button>
+        </div>
+
+        <!-- Прорыв -->
+        <div style="margin-top: 14px; text-align: center;">
+          <button id="btn-breakthrough" class="btn-primary btn-gold" style="width: 100%;">
+            <span>⚡</span> Совершить Прорыв (Шанс: <span id="breakthrough-chance">70%</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Краткий лог последних событий -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📜 Последние озарения</div>
+        </div>
+        <div id="recent-log" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+          Медитируйте и собирайте Ци, чтобы прорваться сквозь узкие места культивации.
+        </div>
+      </div>
+    </section>
+
+    <!-- Вкладка 2: Алхимия -->
+    <section id="tab-alchemy" class="tab-pane">
+      <div class="card">
+        <div class="card-title">⚗️ Бронзовый Алхимический Котел</div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 6px 0 12px 0;">
+          Выплавляйте целебные снадобья и пилюли прорыва из духовных трав. Остерегайтесь взрыва котла!
+        </p>
+        <div id="alchemy-list"></div>
+      </div>
+    </section>
+
+    <!-- Вкладка 3: Пространственное Кольцо (Инвентарь) -->
+    <section id="tab-inventory" class="tab-pane">
+      <div class="card">
+        <div class="card-title">🎒 Пространственное Кольцо</div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 6px 0 12px 0;">
+          Хранилище духовных камней, редких трав и артефактов.
+        </p>
+        <div id="inventory-list"></div>
+      </div>
+    </section>
+
+    <!-- Вкладка 4: Мир и Экспедиции -->
+    <section id="tab-world" class="tab-pane">
+      <div id="world-content"></div>
+    </section>
+
+    <!-- Вкладка 5: Летопись Дао (Хроника) -->
+    <section id="tab-chronicle" class="tab-pane">
+      <div class="card">
+        <div class="card-title">📖 Летопись Жизни Культиватора</div>
+        <div class="log-container" id="chronicle-list" style="margin-top: 10px;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Нижняя панель навигации (Bottom Nav) -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="cultivation">
+      <span class="nav-icon">🧘</span>
+      <span>Дао</span>
+    </button>
+    <button class="nav-item" data-tab="alchemy">
+      <span class="nav-icon">⚗️</span>
+      <span>Алхимия</span>
+    </button>
+    <button class="nav-item" data-tab="inventory">
+      <span class="nav-icon">🎒</span>
+      <span>Кольцо</span>
+    </button>
+    <button class="nav-item" data-tab="world">
+      <span class="nav-icon">⛰️</span>
+      <span>Мир</span>
+    </button>
+    <button class="nav-item" data-tab="chronicle">
+      <span class="nav-icon">📜</span>
+      <span>Хроника</span>
+    </button>
+  </nav>
+
+  <!-- Модальное окно событий и трибуляций -->
+  <div id="game-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 id="modal-title" style="color: var(--gold); margin-bottom: 12px;">Событие</h3>
+      <div id="modal-body" style="margin-bottom: 16px;"></div>
+      <div id="modal-actions"></div>
+      <button id="modal-close" class="btn-icon" style="margin-top: 10px; width: 100%;">Закрыть</button>
+    </div>
+  </div>
+
+  <!-- Скрипты -->
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
