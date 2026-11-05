@@ -1,48 +1,48 @@
-// js/data.js - Игровые базы данных культивации (Сянься)
+// js/data.js - Базы данных культивации, техник, арены, аукционов и врагов
 
 const REALMS = [
   // Закалка тела
-  { id: 'bt_1', name: 'Закалка Тела: 1-й слой', baseQiNeeded: 50, lifespanGain: 0, tribulation: null, color: '#95a5a6' },
-  { id: 'bt_2', name: 'Закалка Тела: 2-й слой', baseQiNeeded: 120, lifespanGain: 0, tribulation: null, color: '#95a5a6' },
-  { id: 'bt_3', name: 'Закалка Тела: 3-й слой', baseQiNeeded: 220, lifespanGain: 0, tribulation: null, color: '#95a5a6' },
-  { id: 'bt_4', name: 'Закалка Тела: 4-й слой', baseQiNeeded: 380, lifespanGain: 0, tribulation: null, color: '#95a5a6' },
-  { id: 'bt_5', name: 'Закалка Тела: 5-й слой', baseQiNeeded: 600, lifespanGain: 0, tribulation: null, color: '#95a5a6' },
-  { id: 'bt_6', name: 'Закалка Тела: 6-й слой', baseQiNeeded: 900, lifespanGain: 0, tribulation: null, color: '#95a5a6' },
-  { id: 'bt_7', name: 'Закалка Тела: 7-й слой', baseQiNeeded: 1300, lifespanGain: 0, tribulation: null, color: '#95a5a6' },
-  { id: 'bt_8', name: 'Закалка Тела: 8-й слой', baseQiNeeded: 1800, lifespanGain: 0, tribulation: null, color: '#95a5a6' },
-  { id: 'bt_9', name: 'Закалка Тела: Пик (9-й слой)', baseQiNeeded: 2500, lifespanGain: 20, tribulation: null, color: '#bdc3c7' },
+  { id: 'bt_1', name: 'Закалка Тела: 1-й слой', baseQiNeeded: 50, lifespanGain: 0, tribulation: null, hp: 100, attack: 15, defense: 5, color: '#95a5a6' },
+  { id: 'bt_2', name: 'Закалка Тела: 2-й слой', baseQiNeeded: 120, lifespanGain: 0, tribulation: null, hp: 130, attack: 22, defense: 8, color: '#95a5a6' },
+  { id: 'bt_3', name: 'Закалка Тела: 3-й слой', baseQiNeeded: 220, lifespanGain: 0, tribulation: null, hp: 170, attack: 30, defense: 12, color: '#95a5a6' },
+  { id: 'bt_4', name: 'Закалка Тела: 4-й слой', baseQiNeeded: 380, lifespanGain: 0, tribulation: null, hp: 220, attack: 40, defense: 18, color: '#95a5a6' },
+  { id: 'bt_5', name: 'Закалка Тела: 5-й слой', baseQiNeeded: 600, lifespanGain: 0, tribulation: null, hp: 280, attack: 52, defense: 25, color: '#95a5a6' },
+  { id: 'bt_6', name: 'Закалка Тела: 6-й слой', baseQiNeeded: 900, lifespanGain: 0, tribulation: null, hp: 350, attack: 68, defense: 35, color: '#95a5a6' },
+  { id: 'bt_7', name: 'Закалка Тела: 7-й слой', baseQiNeeded: 1300, lifespanGain: 0, tribulation: null, hp: 440, attack: 88, defense: 48, color: '#95a5a6' },
+  { id: 'bt_8', name: 'Закалка Тела: 8-й слой', baseQiNeeded: 1800, lifespanGain: 0, tribulation: null, hp: 550, attack: 112, defense: 65, color: '#95a5a6' },
+  { id: 'bt_9', name: 'Закалка Тела: Пик (9-й слой)', baseQiNeeded: 2500, lifespanGain: 20, tribulation: null, hp: 700, attack: 145, defense: 85, color: '#bdc3c7' },
 
   // Конденсация Ци
-  { id: 'qc_1', name: 'Конденсация Ци: 1-й слой', baseQiNeeded: 3500, lifespanGain: 10, tribulation: null, color: '#2ecc71' },
-  { id: 'qc_2', name: 'Конденсация Ци: 2-й слой', baseQiNeeded: 5000, lifespanGain: 5, tribulation: null, color: '#2ecc71' },
-  { id: 'qc_3', name: 'Конденсация Ци: 3-й слой', baseQiNeeded: 7000, lifespanGain: 5, tribulation: null, color: '#2ecc71' },
-  { id: 'qc_4', name: 'Конденсация Ци: 4-й слой', baseQiNeeded: 10000, lifespanGain: 5, tribulation: null, color: '#27ae60' },
-  { id: 'qc_5', name: 'Конденсация Ци: 5-й слой', baseQiNeeded: 14000, lifespanGain: 5, tribulation: null, color: '#27ae60' },
-  { id: 'qc_6', name: 'Конденсация Ци: 6-й слой', baseQiNeeded: 20000, lifespanGain: 5, tribulation: null, color: '#27ae60' },
-  { id: 'qc_7', name: 'Конденсация Ци: 7-й слой', baseQiNeeded: 28000, lifespanGain: 5, tribulation: null, color: '#1abc9c' },
-  { id: 'qc_8', name: 'Конденсация Ци: 8-й слой', baseQiNeeded: 38000, lifespanGain: 5, tribulation: null, color: '#1abc9c' },
-  { id: 'qc_9', name: 'Конденсация Ци: Великий Пик (9-й слой)', baseQiNeeded: 50000, lifespanGain: 20, tribulation: null, color: '#16a085' },
+  { id: 'qc_1', name: 'Конденсация Ци: 1-й слой', baseQiNeeded: 3500, lifespanGain: 10, tribulation: null, hp: 900, attack: 190, defense: 110, color: '#2ecc71' },
+  { id: 'qc_2', name: 'Конденсация Ци: 2-й слой', baseQiNeeded: 5000, lifespanGain: 5, tribulation: null, hp: 1150, attack: 245, defense: 140, color: '#2ecc71' },
+  { id: 'qc_3', name: 'Конденсация Ци: 3-й слой', baseQiNeeded: 7000, lifespanGain: 5, tribulation: null, hp: 1450, attack: 310, defense: 180, color: '#2ecc71' },
+  { id: 'qc_4', name: 'Конденсация Ци: 4-й слой', baseQiNeeded: 10000, lifespanGain: 5, tribulation: null, hp: 1800, attack: 390, defense: 230, color: '#27ae60' },
+  { id: 'qc_5', name: 'Конденсация Ци: 5-й слой', baseQiNeeded: 14000, lifespanGain: 5, tribulation: null, hp: 2250, attack: 490, defense: 290, color: '#27ae60' },
+  { id: 'qc_6', name: 'Конденсация Ци: 6-й слой', baseQiNeeded: 20000, lifespanGain: 5, tribulation: null, hp: 2800, attack: 610, defense: 370, color: '#27ae60' },
+  { id: 'qc_7', name: 'Конденсация Ци: 7-й слой', baseQiNeeded: 28000, lifespanGain: 5, tribulation: null, hp: 3500, attack: 760, defense: 470, color: '#1abc9c' },
+  { id: 'qc_8', name: 'Конденсация Ци: 8-й слой', baseQiNeeded: 38000, lifespanGain: 5, tribulation: null, hp: 4400, attack: 950, defense: 600, color: '#1abc9c' },
+  { id: 'qc_9', name: 'Конденсация Ци: Великий Пик (9-й слой)', baseQiNeeded: 50000, lifespanGain: 20, tribulation: null, hp: 5600, attack: 1200, defense: 780, color: '#16a085' },
 
   // Возведение Основания (Первая настоящая Скорбь)
-  { id: 'fe_early', name: 'Возведение Основания: Ранняя стадия', baseQiNeeded: 80000, lifespanGain: 120, tribulation: { strikes: 3, baseDamage: 40, name: 'Малая Скорбь Земного Грома' }, color: '#3498db' },
-  { id: 'fe_mid', name: 'Возведение Основания: Средняя стадия', baseQiNeeded: 130000, lifespanGain: 30, tribulation: null, color: '#3498db' },
-  { id: 'fe_late', name: 'Возведение Основания: Поздняя стадия', baseQiNeeded: 200000, lifespanGain: 30, tribulation: null, color: '#2980b9' },
-  { id: 'fe_peak', name: 'Возведение Основания: Пик Основания', baseQiNeeded: 320000, lifespanGain: 50, tribulation: null, color: '#2980b9' },
+  { id: 'fe_early', name: 'Возведение Основания: Ранняя стадия', baseQiNeeded: 80000, lifespanGain: 120, tribulation: { strikes: 3, baseDamage: 40, name: 'Малая Скорбь Земного Грома' }, hp: 8000, attack: 1800, defense: 1200, color: '#3498db' },
+  { id: 'fe_mid', name: 'Возведение Основания: Средняя стадия', baseQiNeeded: 130000, lifespanGain: 30, tribulation: null, hp: 11000, attack: 2600, defense: 1800, color: '#3498db' },
+  { id: 'fe_late', name: 'Возведение Основания: Поздняя стадия', baseQiNeeded: 200000, lifespanGain: 30, tribulation: null, hp: 15000, attack: 3700, defense: 2600, color: '#2980b9' },
+  { id: 'fe_peak', name: 'Возведение Основания: Пик Основания', baseQiNeeded: 320000, lifespanGain: 50, tribulation: null, hp: 21000, attack: 5200, defense: 3700, color: '#2980b9' },
 
   // Золотое Ядро
-  { id: 'gc_early', name: 'Золотое Ядро: Ранняя стадия', baseQiNeeded: 550000, lifespanGain: 300, tribulation: { strikes: 6, baseDamage: 120, name: 'Скорбь Девяти Облаков и Демон Сердца' }, color: '#f39c12' },
-  { id: 'gc_mid', name: 'Золотое Ядро: Средняя стадия', baseQiNeeded: 900000, lifespanGain: 50, tribulation: null, color: '#f39c12' },
-  { id: 'gc_late', name: 'Золотое Ядро: Поздняя стадия', baseQiNeeded: 1500000, lifespanGain: 50, tribulation: null, color: '#e67e22' },
-  { id: 'gc_peak', name: 'Золотое Ядро: Совершенное Золотое Ядро', baseQiNeeded: 2500000, lifespanGain: 100, tribulation: null, color: '#d35400' },
+  { id: 'gc_early', name: 'Золотое Ядро: Ранняя стадия', baseQiNeeded: 550000, lifespanGain: 300, tribulation: { strikes: 6, baseDamage: 120, name: 'Скорбь Девяти Облаков и Демон Сердца' }, hp: 35000, attack: 9000, defense: 6500, color: '#f39c12' },
+  { id: 'gc_mid', name: 'Золотое Ядро: Средняя стадия', baseQiNeeded: 900000, lifespanGain: 50, tribulation: null, hp: 50000, attack: 14000, defense: 10000, color: '#f39c12' },
+  { id: 'gc_late', name: 'Золотое Ядро: Поздняя стадия', baseQiNeeded: 1500000, lifespanGain: 50, tribulation: null, hp: 75000, attack: 2200, defense: 16000, color: '#e67e22' },
+  { id: 'gc_peak', name: 'Золотое Ядро: Совершенное Золотое Ядро', baseQiNeeded: 2500000, lifespanGain: 100, tribulation: null, hp: 110000, attack: 35000, defense: 25000, color: '#d35400' },
 
   // Зарождающаяся Душа
-  { id: 'ns_early', name: 'Зарождающаяся Душа: Ранняя стадия', baseQiNeeded: 4500000, lifespanGain: 1000, tribulation: { strikes: 9, baseDamage: 300, name: 'Великая Небесная Кара Пурпурного Грома' }, color: '#9b59b6' },
-  { id: 'ns_mid', name: 'Зарождающаяся Душа: Средняя стадия', baseQiNeeded: 7500000, lifespanGain: 200, tribulation: null, color: '#9b59b6' },
-  { id: 'ns_late', name: 'Зарождающаяся Душа: Поздняя стадия', baseQiNeeded: 12000000, lifespanGain: 200, tribulation: null, color: '#8e44ad' },
-  { id: 'ns_peak', name: 'Зарождающаяся Душа: Пик Бессмертной Души', baseQiNeeded: 20000000, lifespanGain: 500, tribulation: null, color: '#8e44ad' },
+  { id: 'ns_early', name: 'Зарождающаяся Душа: Ранняя стадия', baseQiNeeded: 4500000, lifespanGain: 1000, tribulation: { strikes: 9, baseDamage: 300, name: 'Великая Небесная Кара Пурпурного Грома' }, hp: 200000, attack: 65000, defense: 48000, color: '#9b59b6' },
+  { id: 'ns_mid', name: 'Зарождающаяся Душа: Средняя стадия', baseQiNeeded: 7500000, lifespanGain: 200, tribulation: null, hp: 320000, attack: 110000, defense: 80000, color: '#9b59b6' },
+  { id: 'ns_late', name: 'Зарождающаяся Душа: Поздняя стадия', baseQiNeeded: 12000000, lifespanGain: 200, tribulation: null, hp: 500000, attack: 180000, defense: 130000, color: '#8e44ad' },
+  { id: 'ns_peak', name: 'Зарождающаяся Душа: Пик Бессмертной Души', baseQiNeeded: 20000000, lifespanGain: 500, tribulation: null, hp: 800000, attack: 300000, defense: 220000, color: '#8e44ad' },
 
   // Вознесение
-  { id: 'ascended', name: 'Истинный Бессмертный (Вознесение в Высшие Миры)', baseQiNeeded: 99999999, lifespanGain: 99999, tribulation: { strikes: 12, baseDamage: 999, name: 'Скорбь Раскрытия Врат Бессмертных' }, color: '#e74c3c' }
+  { id: 'ascended', name: 'Истинный Бессмертный (Вознесение)', baseQiNeeded: 99999999, lifespanGain: 99999, tribulation: { strikes: 12, baseDamage: 999, name: 'Скорбь Раскрытия Врат Бессмертных' }, hp: 2500000, attack: 999999, defense: 888888, color: '#e74c3c' }
 ];
 
 const SPIRIT_ROOTS = [
@@ -97,6 +97,160 @@ const SPIRIT_ROOTS = [
   }
 ];
 
+// Методы циркуляции Ци в меридианах (стратегии культивации)
+const CULTIVATION_METHODS = [
+  {
+    id: 'standard',
+    name: '«Великий Небесный Круг» (Базовый)',
+    desc: 'Классическая равномерная циркуляция. Сбалансированный сбор Ци без побочных эффектов.',
+    qiMod: 1.0,
+    timeMonths: 1,
+    dangerChance: 0.0,
+    healChance: 0.1
+  },
+  {
+    id: 'turtle',
+    name: '«Дыхание Спящей Черепахи» (Осторожное Дао)',
+    desc: 'Глубокое замедление сердцебиения. Мало Ци, но исцеляет меридианы и расходует меньше жизненных сил.',
+    qiMod: 0.6,
+    timeMonths: 1,
+    dangerChance: 0.0,
+    healChance: 0.45
+  },
+  {
+    id: 'blood',
+    name: '«Кровавый Метод Демона» (Форсированный)',
+    desc: 'Разгон крови и принудительное раскрытие пор. Дает в 2.5 раза больше Ци, но высок риск ожога меридианов и роста Демонов Сердца!',
+    qiMod: 2.5,
+    timeMonths: 1,
+    dangerChance: 0.25,
+    healChance: 0.0
+  },
+  {
+    id: 'comprehension',
+    name: '«Озарение под Водопадом» (Постижение Дао)',
+    desc: 'Попытка уловить законы Неба. Сбор Ци замедлен, но есть шанс получить постоянное Озарение (+к урону или защите).',
+    qiMod: 0.7,
+    timeMonths: 2,
+    dangerChance: 0.05,
+    healChance: 0.15,
+    insightChance: 0.20
+  }
+];
+
+// Боевые техники Дао
+const TECHNIQUES = [
+  {
+    id: 'tech_slash',
+    name: '«Лазурный Клинок Ветра»',
+    element: 'Ветер',
+    qiCost: 40,
+    multiplier: 1.6,
+    desc: 'Быстрый удар сконцентрированным лезвием ветра. Наносит 160% урона.',
+    price: 30
+  },
+  {
+    id: 'tech_fireball',
+    name: '«Пламя Золотого Ворона»',
+    element: 'Огонь',
+    qiCost: 80,
+    multiplier: 2.2,
+    desc: 'Сгусток ревущего духовного огня. Наносит 220% урона и поджигает врага.',
+    price: 100
+  },
+  {
+    id: 'tech_shield',
+    name: '«Нефритовый Барьер Пяти Элементов»',
+    element: 'Земля',
+    qiCost: 60,
+    multiplier: 0.5,
+    isShield: true,
+    desc: 'Призывает защитный купол из духовной энергии, поглощающий 60% урона в следующем раунде.',
+    price: 80
+  },
+  {
+    id: 'tech_ghost_step',
+    name: '«Призрачная Поступь Тени»',
+    element: 'Инь',
+    qiCost: 90,
+    multiplier: 1.4,
+    isDodge: true,
+    desc: 'Мгновенное размытие тела в воздухе. Дает 85% шанс уклониться от вражеской атаки + контратака.',
+    price: 250
+  },
+  {
+    id: 'tech_blood_drain',
+    name: '«Искусство Пожирания Крови»',
+    element: 'Демонический',
+    qiCost: 120,
+    multiplier: 2.0,
+    drainPercent: 0.5,
+    demonCost: 10,
+    desc: 'Запретная демоническая техника. Наносит 200% урона и лечит вас на 50% от нанесенного урона, но пробуждает Демонов Сердца (+10).',
+    price: 400
+  }
+];
+
+// Иерархия в Секте
+const SECT_RANKS = [
+  { id: 0, title: 'Чернорабочий / Слуга', stipend: 5, reqScore: 0, desc: 'Колет дрова, носит воду. Старейшины смотрят как на пыль.' },
+  { id: 1, title: 'Внешний Ученик', stipend: 25, reqScore: 100, desc: 'Официальный адепт. Допуск к павильону боевых искусств.' },
+  { id: 2, title: 'Внутренний Ученик', stipend: 80, reqScore: 300, desc: 'Уважаемый практик. Получает личную обитель и пилюли.' },
+  { id: 3, title: 'Основной Ученик (Core Disciple)', stipend: 200, reqScore: 700, desc: 'Элита секты. Правая рука старейшин, доступ к сокровищнице.' },
+  { id: 4, title: 'Наследующий Преемник (True Disciple)', stipend: 500, reqScore: 1500, desc: 'Будущий Глава Секты. Никто не смеет перечить вам!' }
+];
+
+// Противники на Арене Секты
+const ARENA_OPPONENTS = [
+  { id: 'opp_1', name: 'Ученик Чжао (Внешний двор)', realmIdx: 2, hp: 200, attack: 35, defense: 10, rewardStones: 15, score: 30, quote: '«Ничтожество вроде тебя посмело бросить мне вызов?!»' },
+  { id: 'opp_2', name: 'Ван Мэн (Железный Кулак)', realmIdx: 4, hp: 380, attack: 65, defense: 30, rewardStones: 30, score: 50, quote: '«Мои кости крепче горной породы!»' },
+  { id: 'opp_3', name: 'Ши Цинсюань (Ледяная Дева)', realmIdx: 6, hp: 600, attack: 110, defense: 45, rewardStones: 60, score: 90, quote: '«Твое дыхание Ци слишком нечисто.»' },
+  { id: 'opp_4', name: 'Молодой Господин Сун', realmIdx: 8, hp: 950, attack: 180, defense: 75, rewardStones: 120, score: 150, quote: '«Мой дядя — Старейшина Зала Наказаний! Сдайся сам!»' },
+  { id: 'opp_5', name: 'Ху Ли (Лисий Клинок)', realmIdx: 10, hp: 1500, attack: 280, defense: 120, rewardStones: 220, score: 240, quote: '«В бою нет места жалости, только клинки и кровь.»' },
+  { id: 'opp_6', name: 'Бай Чэнь (Гений Меча)', realmIdx: 12, hp: 2800, attack: 520, defense: 220, rewardStones: 400, score: 400, quote: '«Узри истинную суть Пути Меча Лазурного Облака!»' },
+  { id: 'opp_7', name: 'Старший Брат Фэн (Пик Основания)', realmIdx: 14, hp: 5500, attack: 1100, defense: 450, rewardStones: 800, score: 700, quote: '«Покажи мне, достоин ли ты войти в элиту секты!»' }
+];
+
+// Лоты для Тайного Аукциона
+const AUCTION_ITEMS = [
+  {
+    id: 'auc_tech_fire',
+    name: 'Свиток «Пламя Золотого Ворона»',
+    desc: 'Древняя техника атакующего пламени.',
+    type: 'technique',
+    techId: 'tech_fireball',
+    startBid: 60,
+    rivalMaxBid: 160
+  },
+  {
+    id: 'auc_tech_ghost',
+    name: 'Свиток «Призрачная Поступь Тени»',
+    desc: 'Редчайшее искусство уклонения клана Призраков.',
+    type: 'technique',
+    techId: 'tech_ghost_step',
+    startBid: 150,
+    rivalMaxBid: 320
+  },
+  {
+    id: 'auc_pill_foundation',
+    name: 'Высшая Пилюля Возведения Основания с Золотыми Узорами',
+    desc: 'Идеальная пилюля без примесей токсинов. Дает +35% к шансу прорыва.',
+    type: 'pill',
+    pillId: 'pill_foundation',
+    startBid: 50,
+    rivalMaxBid: 140
+  },
+  {
+    id: 'auc_lotus',
+    name: 'Тысячелетний Снежный Лотос',
+    desc: 'Легендарное сокровище, очищающее сразу 30% травм меридианов и Демонов Сердца.',
+    type: 'special',
+    effect: 'lotus_legend',
+    startBid: 80,
+    rivalMaxBid: 210
+  }
+];
+
 const ALCHEMY_RECIPES = [
   {
     id: 'pill_qi',
@@ -142,6 +296,20 @@ const ALCHEMY_RECIPES = [
 
 const EXPEDITION_EVENTS = [
   {
+    id: 'beast_ambush',
+    title: 'Засада Духовного Зверя',
+    text: 'Из зарослей железного бамбука с ревом выскакивает Двуглавый Громовой Волк! Его клыки искрятся электричеством!',
+    isCombat: true,
+    enemy: {
+      name: 'Двуглавый Громовой Волк',
+      hp: 320,
+      attack: 55,
+      defense: 20,
+      rewardStones: 35,
+      rewardHerbs: { herb_spirit: 4, herb_ginseng: 2 }
+    }
+  },
+  {
     id: 'find_herbs',
     title: 'Поляна Духовных Трав',
     text: 'Блуждая в густом тумане Ущелья Спящего Дракона, вы натыкаетесь на заросшую поляну, где пульсируют стебли Духовного Женьшеня.',
@@ -165,29 +333,35 @@ const EXPEDITION_EVENTS = [
     ]
   },
   {
-    id: 'arrogant_young_master',
-    title: 'Встреча с Молодым Господином',
-    text: 'Навстречу вам идет юноша в расшитых шелковых одеждах клана Ван. Позади него — два свирепых телохранителя. «Эй, ничтожество! Отдай свое пространственное кольцо и поклонись десять раз, тогда я сохраню твой труп целым!»',
+    id: 'dying_cultivator',
+    title: 'Умирающий Демонический Практик (Моральный выбор)',
+    text: 'У корней древней сосны лежит тяжелораненый старик в черной мантии. Он сжимает в руке темный нефритовый свиток и шепчет: «Помоги мне... доставь пилюлю исцеления, и я обучу тебя тайне... или ты жаждешь добить меня, как эти лицемеры из праведных сект?»',
     choices: [
       {
-        text: 'Показать свою культивацию и дать отпор',
+        text: 'Спасти старика (Отдать 1 Пилюлю Очищения)',
         action: (game) => {
-          if (game.realmIndex >= 9) { // С Конденсации Ци
-            const stones = Math.floor(Math.random() * 30) + 20;
-            game.inventory.stone_spirit = (game.inventory.stone_spirit || 0) + stones;
-            return `Вы холодно хмыкнули и выпустили ауру своего уровня. Молодой господин побледнел, споткнулся и с криками бросился бежать, выронив кошель с ${stones} духовными камнями!`;
+          if ((game.inventory.pill_purify || 0) >= 1) {
+            game.inventory.pill_purify -= 1;
+            game.learnTechnique('tech_blood_drain');
+            return 'Старик проглотил пилюлю, его глаза блеснули алым: «В тебе есть понимание природы мира. Возьми этот свиток Запретного Демонического Пожирания!»';
           } else {
-            const dmg = 25;
-            game.meridianDamage = Math.min(100, (game.meridianDamage || 0) + 15);
-            game.demonsOfHeart += 10;
-            return `Ваша сила оказалась недостаточной! Телохранители нанесли удар в грудь. Вы сумели скрыться в тумане, но меридианы повреждены (+15% травм), а в душе поселилась обида (+10 к Демонам Сердца).`;
+            return 'У вас не оказалось Пилюли Очищения в кольце. Старик испустил последний вздох, его свиток рассыпался в прах.';
           }
         }
       },
       {
-        text: 'Отступить в тени скал (Осторожное Дао)',
+        text: 'Добить культиватора и забрать сокровища (Демоническое Дао)',
         action: (game) => {
-          return 'Вы благоразумно скрыли дыхание Ци и проскользнули мимо глупцов. Истинный культиватор знает, когда нужно терпеть.';
+          const stones = 80;
+          game.inventory.stone_spirit = (game.inventory.stone_spirit || 0) + stones;
+          game.demonsOfHeart += 15;
+          return `Вы без колебаний оборвали его жизнь. В его кольце нашлось ${stones} камней, но в вашей душе поселилась темная рябь (+15 к Демонам Сердца).`;
+        }
+      },
+      {
+        text: 'Пройти мимо, не вмешиваясь в карму',
+        action: (game) => {
+          return 'Вы не стали вмешиваться в чужую судьбу и продолжили путь чистым от кармических уз.';
         }
       }
     ]
@@ -202,12 +376,12 @@ const EXPEDITION_EVENTS = [
         action: (game) => {
           const success = Math.random() > 0.4;
           if (success) {
-            game.inventory.stone_spirit = (game.inventory.stone_spirit || 0) + 50;
+            game.inventory.stone_spirit = (game.inventory.stone_spirit || 0) + 60;
             game.inventory.herb_lotus = (game.inventory.herb_lotus || 0) + 2;
-            return 'Формация с тихим звоном рассеялась! Внутри вы нашли каменную шкатулку: 50 духовных камней и 2 Лотоса Чистого Сердца!';
+            return 'Формация с тихим звоном рассеялась! Внутри вы нашли каменную шкатулку: 60 духовных камней и 2 Лотоса Чистого Сердца!';
           } else {
-            game.meridianDamage = Math.min(100, (game.meridianDamage || 0) + 10);
-            return 'Защитная руна сдетонировала остаточным зарядом молнии! Вы получили ожог меридианов (+10% травм).';
+            game.meridianDamage = Math.min(100, (game.meridianDamage || 0) + 12);
+            return 'Защитная руна сдетонировала остаточным зарядом молнии! Вы получили ожог меридианов (+12% травм).';
           }
         }
       },

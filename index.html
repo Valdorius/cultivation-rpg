@@ -28,7 +28,7 @@
   <!-- Основная рабочая область -->
   <main class="main-viewport">
     
-    <!-- Вкладка 1: Культивация -->
+    <!-- Вкладка 1: Культивация и Дао -->
     <section id="tab-cultivation" class="tab-pane active">
       <div class="card">
         <div class="cultivator-info">
@@ -46,15 +46,26 @@
           </div>
           <div class="stat-item">
             <div class="stat-label">🌱 Духовный Корень</div>
-            <div id="stat-root" class="stat-value gold" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+            <div id="stat-root" class="stat-value gold" style="font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">⚔️ Боевая Мощь</div>
+            <div id="stat-combat" class="stat-value gold">⚔️ 15 | 🛡️ 5</div>
           </div>
           <div class="stat-item">
             <div class="stat-label">⚡ Меридианы</div>
             <div id="stat-meridians" class="stat-value jade">100%</div>
           </div>
-          <div class="stat-item">
-            <div class="stat-label">😈 Демоны Сердца</div>
-            <div id="stat-demons" class="stat-value">0 / 100</div>
+        </div>
+
+        <!-- Жизненная Сила (ОЗ) -->
+        <div class="progress-container">
+          <div class="progress-header">
+            <span style="color: var(--crimson); font-weight: 600;">Жизненная сила (ОЗ)</span>
+            <span id="hp-text">100 / 100 ОЗ</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="hp-fill" class="progress-bar-fill hp-bar-fill" style="width: 100%;"></div>
           </div>
         </div>
 
@@ -69,10 +80,18 @@
           </div>
         </div>
 
+        <!-- Выбор метода циркуляции Ци в меридианах -->
+        <div style="margin-top: 10px;">
+          <div style="font-size: 0.8rem; color: var(--gold); font-weight: 600; margin-bottom: 4px;">
+            🌀 Метод циркуляции Ци в меридианах:
+          </div>
+          <div class="methods-selector" id="methods-selector"></div>
+        </div>
+
         <!-- Кнопки управления медитацией -->
         <div class="action-grid">
           <button id="btn-meditate" class="btn-primary">
-            <span>🧘</span> Медитировать (1 мес.)
+            <span>🧘</span> Направить поток Ци
           </button>
           <button id="btn-auto-meditate" class="btn-primary">
             <span>⚡</span> Авто-поток Ци
@@ -80,25 +99,25 @@
         </div>
 
         <!-- Прорыв -->
-        <div style="margin-top: 14px; text-align: center;">
+        <div style="margin-top: 12px; text-align: center;">
           <button id="btn-breakthrough" class="btn-primary btn-gold" style="width: 100%;">
-            <span>⚡</span> Совершить Прорыв (Шанс: <span id="breakthrough-chance">70%</span>)
+            <span>⚡</span> Преодолеть Узкое Место (Шанс: <span id="breakthrough-chance">70%</span>)
           </button>
-        </div>
-      </div>
-
-      <!-- Краткий лог последних событий -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">📜 Последние озарения</div>
-        </div>
-        <div id="recent-log" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-          Медитируйте и собирайте Ци, чтобы прорваться сквозь узкие места культивации.
         </div>
       </div>
     </section>
 
-    <!-- Вкладка 2: Алхимия -->
+    <!-- Вкладка 2: Арена и Турнир Секты -->
+    <section id="tab-arena" class="tab-pane">
+      <div id="arena-content"></div>
+    </section>
+
+    <!-- Вкладка 3: Рынок и Аукцион -->
+    <section id="tab-market" class="tab-pane">
+      <div id="market-content"></div>
+    </section>
+
+    <!-- Вкладка 4: Алхимия -->
     <section id="tab-alchemy" class="tab-pane">
       <div class="card">
         <div class="card-title">⚗️ Бронзовый Алхимический Котел</div>
@@ -109,27 +128,27 @@
       </div>
     </section>
 
-    <!-- Вкладка 3: Пространственное Кольцо (Инвентарь) -->
+    <!-- Вкладка 5: Пространственное Кольцо -->
     <section id="tab-inventory" class="tab-pane">
       <div class="card">
         <div class="card-title">🎒 Пространственное Кольцо</div>
         <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 6px 0 12px 0;">
-          Хранилище духовных камней, редких трав и артефактов.
+          Хранилище духовных камней, редких трав и снадобий.
         </p>
         <div id="inventory-list"></div>
       </div>
     </section>
 
-    <!-- Вкладка 4: Мир и Экспедиции -->
+    <!-- Вкладка 6: Мир и Экспедиции -->
     <section id="tab-world" class="tab-pane">
       <div id="world-content"></div>
     </section>
 
-    <!-- Вкладка 5: Летопись Дао (Хроника) -->
+    <!-- Вкладка 7: Летопись Дао -->
     <section id="tab-chronicle" class="tab-pane">
       <div class="card">
         <div class="card-title">📖 Летопись Жизни Культиватора</div>
-        <div class="log-container" id="chronicle-list" style="margin-top: 10px;"></div>
+        <div class="log-container" id="chronicle-list" style="margin-top: 8px;"></div>
       </div>
     </section>
 
@@ -141,9 +160,17 @@
       <span class="nav-icon">🧘</span>
       <span>Дао</span>
     </button>
+    <button class="nav-item" data-tab="arena">
+      <span class="nav-icon">⚔️</span>
+      <span>Арена</span>
+    </button>
+    <button class="nav-item" data-tab="market">
+      <span class="nav-icon">🏛️</span>
+      <span>Рынок</span>
+    </button>
     <button class="nav-item" data-tab="alchemy">
       <span class="nav-icon">⚗️</span>
-      <span>Алхимия</span>
+      <span>Котел</span>
     </button>
     <button class="nav-item" data-tab="inventory">
       <span class="nav-icon">🎒</span>
@@ -158,6 +185,53 @@
       <span>Хроника</span>
     </button>
   </nav>
+
+  <!-- Боевой экран (Интерактивная битва) -->
+  <div id="combat-modal" class="modal-overlay">
+    <div class="modal-content combat-arena">
+      <h3 style="color: var(--crimson); margin-bottom: 10px;">⚔️ Поединок Культиваторов</h3>
+      
+      <!-- Противники -->
+      <div class="combat-fighters">
+        <div class="fighter-card player">
+          <div id="combat-player-name" style="font-weight: 700; color: var(--jade); font-size: 0.85rem;">Хань Ли</div>
+          <div style="font-size: 0.72rem; color: var(--text-secondary); margin: 3px 0;" id="combat-player-hp-text">100 / 100</div>
+          <div class="progress-bar-bg" style="height: 8px;">
+            <div id="combat-player-hp-fill" class="progress-bar-fill hp-bar-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <div style="font-size: 1.2rem; font-weight: 900; color: var(--gold);">VS</div>
+
+        <div class="fighter-card enemy">
+          <div id="combat-enemy-name" style="font-weight: 700; color: var(--crimson); font-size: 0.85rem;">Противник</div>
+          <div style="font-size: 0.72rem; color: var(--text-secondary); margin: 3px 0;" id="combat-enemy-hp-text">100 / 100</div>
+          <div class="progress-bar-bg" style="height: 8px;">
+            <div id="combat-enemy-hp-fill" class="progress-bar-fill hp-bar-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Журнал боя -->
+      <div class="combat-log-box" id="combat-log-box"></div>
+
+      <!-- Кнопки действий в бою -->
+      <div class="combat-actions-grid">
+        <button class="btn-primary" onclick="ui.handleCombatAction('attack')">
+          <span>🗡️</span> Атака клинком
+        </button>
+        <button id="btn-combat-tech" class="btn-primary btn-gold" onclick="ui.handleCombatAction('technique')">
+          <span>🔮</span> Боевая техника
+        </button>
+        <button class="btn-primary" onclick="ui.handleCombatAction('pill')">
+          <span>🧪</span> Выпить пилюлю
+        </button>
+        <button class="btn-primary btn-crimson" onclick="ui.handleCombatAction('flee')">
+          <span>🏃</span> Сбежать
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Модальное окно событий и трибуляций -->
   <div id="game-modal" class="modal-overlay">

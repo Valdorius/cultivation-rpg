@@ -1,4 +1,4 @@
-// js/audio.js - Процедурный синтезатор звуков культивации (Web Audio API)
+// js/audio.js - Процедурный синтезатор звуков культивации и боев (Web Audio API)
 
 class SoundFX {
   constructor() {
@@ -33,7 +33,7 @@ class SoundFX {
     const gain = this.ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(220, this.ctx.currentTime); // Ля (A3)
+    osc.frequency.setValueAtTime(220, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(440, this.ctx.currentTime + 0.3);
 
     gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
@@ -52,7 +52,7 @@ class SoundFX {
     this.init();
     if (!this.ctx) return;
 
-    const freqs = [174, 285, 528]; // Частоты исцеления Сольфеджио
+    const freqs = [174, 285, 528];
     freqs.forEach((f, idx) => {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
@@ -71,13 +71,12 @@ class SoundFX {
     });
   }
 
-  // Удар Небесной Молнии (Гром Скорби)
+  // Удар Небесной Молнии
   playThunder() {
     if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
 
-    // Белый шум для раската
     const bufferSize = this.ctx.sampleRate * 0.8;
     const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
     const output = buffer.getChannelData(0);
@@ -105,6 +104,98 @@ class SoundFX {
     whiteNoise.stop(this.ctx.currentTime + 0.8);
   }
 
+  // Звук удара меча / свиста Ци в бою
+  playSwordSlash() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.18);
+
+    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.18);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.2);
+  }
+
+  // Вспышка боевой техники (огненный шар / заклинание)
+  playTechniqueCast() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(900, this.ctx.currentTime + 0.25);
+
+    gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.3);
+  }
+
+  // Нефритовый щит (глухой защитный резонанс)
+  playShieldBlock() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.2);
+
+    gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.25);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.25);
+  }
+
+  // Молоточек аукциона (четкий деревянный стук)
+  playGavel() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(280, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.08);
+
+    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.09);
+  }
+
   // Неудача / Травма меридианов
   playFailure() {
     if (!this.enabled) return;
@@ -128,7 +219,7 @@ class SoundFX {
     osc.stop(this.ctx.currentTime + 0.5);
   }
 
-  // Успех алхимии (хрустальный перезвон)
+  // Успех алхимии
   playAlchemy() {
     if (!this.enabled) return;
     this.init();
@@ -138,8 +229,8 @@ class SoundFX {
     const gain = this.ctx.createGain();
 
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(659.25, this.ctx.currentTime); // E5
-    osc.frequency.setValueAtTime(880, this.ctx.currentTime + 0.1); // A5
+    osc.frequency.setValueAtTime(659.25, this.ctx.currentTime);
+    osc.frequency.setValueAtTime(880, this.ctx.currentTime + 0.1);
 
     gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.6);

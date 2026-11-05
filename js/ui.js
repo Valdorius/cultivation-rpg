@@ -1,4 +1,4 @@
-// js/ui.js - Управление пользовательским интерфейсом и визуализациями
+// js/ui.js - Контроллер интерфейса v2.0 (Арена, Боевая система, Методы циркуляции, Аукцион)
 
 class GameUI {
   constructor() {
@@ -17,13 +17,14 @@ class GameUI {
       });
     });
 
-    // Кнопка медитации
+    // Медитация
     const btnMeditate = document.getElementById('btn-meditate');
     if (btnMeditate) {
       btnMeditate.addEventListener('click', () => {
         sfx.playMeditation();
-        const res = gameEngine.meditate(1);
+        const res = gameEngine.meditate();
         this.render();
+        if (res.specialMsg) this.showToast(res.specialMsg);
         if (res.reachedCap) {
           this.showToast('Даньтянь полон! Настало время прорыва через узкое место!');
         }
@@ -38,6 +39,7 @@ class GameUI {
         const isRunning = gameEngine.toggleAutoMeditation((res) => {
           sfx.playMeditation();
           this.render();
+          if (res.specialMsg) this.showToast(res.specialMsg);
         });
         btnAuto.classList.toggle('btn-auto-active', isRunning);
         btnAuto.innerHTML = isRunning 
@@ -54,7 +56,7 @@ class GameUI {
       });
     }
 
-    // Переключатель звука
+    // Звук
     const btnSound = document.getElementById('btn-sound-toggle');
     if (btnSound) {
       btnSound.addEventListener('click', () => {
@@ -63,7 +65,7 @@ class GameUI {
       });
     }
 
-    // Рестарт / Новая жизнь
+    // Сброс
     const btnReset = document.getElementById('btn-reset');
     if (btnReset) {
       btnReset.addEventListener('click', () => {
@@ -75,7 +77,7 @@ class GameUI {
       });
     }
 
-    // Закрытие модального окна
+    // Модальное окно закрытие
     const modalClose = document.getElementById('modal-close');
     if (modalClose) {
       modalClose.addEventListener('click', () => {
@@ -104,20 +106,20 @@ class GameUI {
 
     const realm = gameEngine.currentRealm;
     const root = gameEngine.spiritRoot;
+    const sectRank = gameEngine.currentSectRank;
 
     // Шапка и профиль
     document.getElementById('player-name').textContent = p.name;
-    document.getElementById('player-realm').textContent = realm.name;
+    document.getElementById('player-realm').textContent = `${realm.name} (${sectRank.title})`;
     document.getElementById('player-realm').style.borderColor = realm.color;
     document.getElementById('player-realm').style.color = realm.color;
 
-    // Возраст и продолжительность жизни
+    // Долголетие
     const lifespanEl = document.getElementById('stat-lifespan');
     if (lifespanEl) {
       const remaining = p.maxLifespanYears - p.ageYears;
       lifespanEl.textContent = `${p.ageYears} лет / макс. ${p.maxLifespanYears} (${remaining} осталось)`;
-      if (remaining <= 5) lifespanEl.className = 'stat-value danger';
-      else lifespanEl.className = 'stat-value';
+      lifespanEl.className = remaining <= 5 ? 'stat-value danger' : 'stat-value';
     }
 
     // Духовный корень
@@ -125,6 +127,12 @@ class GameUI {
     if (rootEl) {
       rootEl.textContent = root.name;
       rootEl.title = root.description;
+    }
+
+    // Боевая мощь (Атака / Защита / ОЗ)
+    const hpEl = document.getElementById('stat-combat');
+    if (hpEl) {
+      hpEl.textContent = `⚔️ ${gameEngine.attack} | 🛡️ ${gameEngine.defense}`;
     }
 
     // Меридианы и Демоны
@@ -148,6 +156,17 @@ class GameUI {
     document.getElementById('qi-text').textContent = `${qiCurrent.toLocaleString()} / ${qiMax.toLocaleString()} Ци (${percent}%)`;
     document.getElementById('qi-fill').style.width = `${percent}%`;
 
+    // Шкала Здоровья (ОЗ)
+    const hpMax = gameEngine.maxHp;
+    const hpCur = p.currentHp !== undefined ? p.currentHp : hpMax;
+    const hpPercent = Math.min(100, (hpCur / hpMax) * 100).toFixed(0);
+    const hpTextEl = document.getElementById('hp-text');
+    const hpFillEl = document.getElementById('hp-fill');
+    if (hpTextEl && hpFillEl) {
+      hpTextEl.textContent = `${hpCur} / ${hpMax} ОЗ (${hpPercent}%)`;
+      hpFillEl.style.width = `${hpPercent}%`;
+    }
+
     // Шанс прорыва
     const chance = Math.round(gameEngine.calcBreakthroughChance() * 100);
     const chanceEl = document.getElementById('breakthrough-chance');
@@ -156,14 +175,296 @@ class GameUI {
       chanceEl.className = chance >= 60 ? 'jade' : (chance < 40 ? 'danger' : 'gold');
     }
 
+    // Рендер методов циркуляции
+    this.renderCultivationMethods();
+
     this.renderTabContent(this.currentTab);
+  }
+
+  renderCultivationMethods() {
+    const container = document.getElementById('methods-selector');
+    if (!container) return;
+
+    let html = '';
+    CULTIVATION_METHODS.forEach(m => {
+      const active = gameEngine.player.cultivationMethod === m.id;
+      html += `
+        <div class="method-btn ${active ? 'active' : ''}" onclick="ui.selectMethod('${m.id}')">
+          <h5>${m.name}</h5>
+          <p>${m.desc}</p>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  selectMethod(methodId) {
+    gameEngine.player.cultivationMethod = methodId;
+    gameEngine.save();
+    sfx.playClick();
+    this.render();
   }
 
   renderTabContent(tab) {
     if (tab === 'inventory') this.renderInventory();
     if (tab === 'alchemy') this.renderAlchemy();
+    if (tab === 'arena') this.renderArena();
+    if (tab === 'market') this.renderMarket();
     if (tab === 'world') this.renderWorld();
     if (tab === 'chronicle') this.renderChronicle();
+  }
+
+  // --- АРЕНА И ТУРНИР СЕКТЫ ---
+  renderArena() {
+    const container = document.getElementById('arena-content');
+    if (!container) return;
+
+    const p = gameEngine.player;
+    const rank = gameEngine.currentSectRank;
+    const nextRank = SECT_RANKS[p.sectRankId + 1];
+
+    let html = `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🏯 Турнир Арены Секты Лазурного Облака</div>
+          <span style="font-size: 0.8rem; color: var(--gold); font-weight: 600;">Очки: ${p.arenaScore}</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px;">
+          Ваш статус: <strong style="color: var(--jade);">${rank.title}</strong> (${rank.desc}).
+          ${nextRank ? `До ранга «${nextRank.title}»: ${Math.max(0, nextRank.reqScore - p.arenaScore)} очков.` : 'Вы достигли вершины иерархии!'}
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">⚔️ Соперники на помосте</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+    `;
+
+    ARENA_OPPONENTS.forEach(opp => {
+      const isDefeated = p.defeatedOpponents.includes(opp.id);
+      const realmName = REALMS[opp.realmIdx].name;
+
+      html += `
+        <div class="item-card">
+          <div class="item-details" style="flex: 1; padding-right: 8px;">
+            <h4>${opp.name} ${isDefeated ? '⭐' : ''}</h4>
+            <p>${realmName} | Атака: ${opp.attack} | ОЗ: ${opp.hp}</p>
+            <p style="font-style: italic; color: var(--gold); font-size: 0.7rem;">${opp.quote}</p>
+          </div>
+          <button class="btn-small" onclick="ui.startArenaDuel('${opp.id}')">
+            ${isDefeated ? 'Реванш' : 'Бросить вызов'}
+          </button>
+        </div>
+      `;
+    });
+
+    html += `</div></div>`;
+    container.innerHTML = html;
+  }
+
+  startArenaDuel(oppId) {
+    const opp = ARENA_OPPONENTS.find(o => o.id === oppId);
+    if (!opp) return;
+
+    gameEngine.startCombat(opp, (result) => {
+      this.render();
+      if (result.victory) {
+        this.showToast(`Вы одолели ${opp.name} на арене секты!`);
+      }
+    });
+
+    this.openCombatModal();
+  }
+
+  // --- БОЕВОЙ МОДАЛЬНЫЙ ЭКРАН ---
+  openCombatModal() {
+    const modal = document.getElementById('combat-modal');
+    if (!modal) return;
+    modal.classList.add('active');
+    this.renderCombatFrame();
+  }
+
+  renderCombatFrame() {
+    const c = gameEngine.activeCombat;
+    if (!c) {
+      document.getElementById('combat-modal').classList.remove('active');
+      return;
+    }
+
+    const enemy = c.enemy;
+    const p = gameEngine.player;
+    const tech = TECHNIQUES.find(t => t.id === p.equippedTechniqueId) || TECHNIQUES[0];
+
+    // Боец: Враг
+    document.getElementById('combat-enemy-name').textContent = enemy.name;
+    const enemyPercent = Math.max(0, Math.min(100, (enemy.currentHp / enemy.maxHp) * 100)).toFixed(0);
+    document.getElementById('combat-enemy-hp-text').textContent = `${enemy.currentHp} / ${enemy.maxHp}`;
+    document.getElementById('combat-enemy-hp-fill').style.width = `${enemyPercent}%`;
+
+    // Боец: Игрок
+    document.getElementById('combat-player-name').textContent = p.name;
+    const playerPercent = Math.max(0, Math.min(100, (c.playerHp / gameEngine.maxHp) * 100)).toFixed(0);
+    document.getElementById('combat-player-hp-text').textContent = `${c.playerHp} / ${gameEngine.maxHp} (Щит: ${c.playerShield})`;
+    document.getElementById('combat-player-hp-fill').style.width = `${playerPercent}%`;
+
+    // Журнал боя
+    const logBox = document.getElementById('combat-log-box');
+    logBox.innerHTML = c.log.map(l => `<div>• ${l}</div>`).join('');
+    logBox.scrollTop = logBox.scrollHeight;
+
+    // Кнопка техники
+    document.getElementById('btn-combat-tech').innerHTML = `
+      <span>🔮</span> ${tech.name} (${tech.qiCost} Ци)
+    `;
+  }
+
+  handleCombatAction(action) {
+    const res = gameEngine.combatAction(action);
+    if (res && res.error) {
+      this.showToast(res.error);
+      return;
+    }
+    if (res && res.fled) {
+      document.getElementById('combat-modal').classList.remove('active');
+      this.render();
+      return;
+    }
+    this.renderCombatFrame();
+    if (res && (res.victory || res.victory === false)) {
+      setTimeout(() => {
+        document.getElementById('combat-modal').classList.remove('active');
+        this.render();
+      }, 1400);
+    }
+  }
+
+  // --- РЫНОК И ТАЙНЫЙ АУКЦИОН ---
+  renderMarket() {
+    const container = document.getElementById('market-content');
+    if (!container) return;
+
+    const p = gameEngine.player;
+
+    let html = `
+      <div class="card">
+        <div class="card-title">🔨 Тайный Аукцион «Павильона Сокровищ»</div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 6px 0;">
+          Здесь выставляются редчайшие свитки боевых техник и снадобья. Молодые мастера древних кланов торгуются до последнего камня!
+        </p>
+        <div id="auction-container" style="margin-top: 10px;">
+          ${this.getAuctionHtml()}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📜 Павильон Боевых Техник Секты</div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 6px 0;">
+          Доступные для покупки свитки техник за духовные камни:
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+    `;
+
+    TECHNIQUES.forEach(t => {
+      const learned = p.learnedTechniques.includes(t.id);
+      const isEquipped = p.equippedTechniqueId === t.id;
+      const canAfford = (p.inventory.stone_spirit || 0) >= t.price;
+
+      html += `
+        <div class="item-card">
+          <div class="item-details" style="flex: 1; padding-right: 8px;">
+            <h4>${t.name} ${isEquipped ? '⚔️ (Экипирована)' : ''}</h4>
+            <p>${t.desc}</p>
+            <div style="font-size: 0.72rem; color: var(--gold); margin-top: 2px;">
+              Стихия: ${t.element} | Расход: ${t.qiCost} Ци
+            </div>
+          </div>
+          <div>
+            ${learned 
+              ? `<button class="btn-small" onclick="ui.equipTech('${t.id}')">${isEquipped ? 'В бою' : 'Экипировать'}</button>`
+              : `<button class="btn-small" ${canAfford ? '' : 'disabled style="opacity: 0.5;"'} onclick="ui.buyTech('${t.id}')">${t.price} камней</button>`
+            }
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div></div>`;
+    container.innerHTML = html;
+  }
+
+  getAuctionHtml() {
+    const auc = gameEngine.activeAuction;
+    if (!auc) {
+      return `
+        <button class="btn-primary btn-gold" style="width: 100%;" onclick="ui.startNewAuctionLot()">
+          <span>🔨</span> Начать новые торги за лот (Вход: 5 камней)
+        </button>
+      `;
+    }
+
+    const p = gameEngine.player;
+    return `
+      <div style="background: rgba(0,0,0,0.5); padding: 12px; border-radius: 8px; border: 1px solid var(--gold); text-align: left;">
+        <h4 style="color: var(--gold);">${auc.item.name}</h4>
+        <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 4px 0;">${auc.item.desc}</p>
+        <div style="margin: 8px 0; font-size: 0.85rem;">
+          Текущая ставка: <strong style="color: var(--jade);">${auc.currentBid} камней</strong> 
+          <br><span style="font-size: 0.75rem; color: var(--text-secondary);">Лидирует: ${auc.highestBidder}</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button class="btn-primary btn-gold" style="flex: 1;" onclick="ui.bidAuction(15)">
+            Поднять (+15 камней)
+          </button>
+          <button class="btn-primary" style="flex: 1;" onclick="ui.bidAuction(40)">
+            Поднять (+40 камней)
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  startNewAuctionLot() {
+    if ((gameEngine.player.inventory.stone_spirit || 0) < 5) {
+      this.showToast('Недостаточно камней для входа на аукцион (нужно 5 камней)!');
+      return;
+    }
+    gameEngine.player.inventory.stone_spirit -= 5;
+    gameEngine.startAuctionLot();
+    sfx.playGavel();
+    this.render();
+  }
+
+  bidAuction(step) {
+    const res = gameEngine.placeAuctionBid(step);
+    if (res.error) {
+      this.showToast(res.error);
+    } else if (res.status === 'won') {
+      this.showToast(`🎉 Вы победили на аукционе! Получено: ${res.item.name}`);
+    } else {
+      this.showToast(`Вы подняли ставку до ${res.bid} камней!`);
+    }
+    this.render();
+  }
+
+  buyTech(techId) {
+    const tech = TECHNIQUES.find(t => t.id === techId);
+    if (!tech) return;
+    if ((gameEngine.player.inventory.stone_spirit || 0) < tech.price) {
+      this.showToast('Недостаточно духовных камней!');
+      return;
+    }
+    gameEngine.player.inventory.stone_spirit -= tech.price;
+    gameEngine.learnTechnique(techId);
+    sfx.playAlchemy();
+    this.render();
+    this.showToast(`Вы приобрели и изучили: ${tech.name}`);
+  }
+
+  equipTech(techId) {
+    gameEngine.equipTechnique(techId);
+    sfx.playClick();
+    this.render();
+    this.showToast(`Боевая техника выбрана для боя!`);
   }
 
   renderInventory() {
@@ -176,7 +477,7 @@ class GameUI {
       herb_spirit: { title: 'Духовная Трава', desc: 'Базовый ингредиент для сбора Ци' },
       herb_ginseng: { title: 'Тысячелетний Женьшень', desc: 'Ценный корень, восстанавливает меридианы' },
       herb_lotus: { title: 'Снежный Лотос Чистого Сердца', desc: 'Очищает разум от Демонов Сердца' },
-      pill_qi: { title: 'Пилюля Сбора Ци', desc: 'Мгновенно дает +500 Ци', isConsumable: true },
+      pill_qi: { title: 'Пилюля Сбора Ци', desc: 'Мгновенно дает +500 Ци / лечит в бою', isConsumable: true },
       pill_purify: { title: 'Пилюля Очищения Меридианов', desc: 'Исцеляет 30% травм', isConsumable: true },
       pill_foundation: { title: 'Пилюля Возведения Основания', desc: '+25% к шансу прорыва', isConsumable: true },
       pill_heart_calm: { title: 'Пилюля Спокойствия Сердца', desc: '-40 к Демонам Сердца', isConsumable: true },
@@ -276,18 +577,18 @@ class GameUI {
         <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 8px 0;">
           Опасное ущелье, наполненное туманом, дикими духовными зверями и полянами редких трав.
         </p>
-        <button class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="ui.triggerExpedition()">
+        <button class="btn-primary btn-crimson" style="width: 100%; margin-top: 10px;" onclick="ui.triggerExpedition()">
           <span>🧭</span> Отправиться в экспедицию (1 месяц)
         </button>
       </div>
 
       <div class="card">
-        <div class="card-title">🏯 Секта Лазурного Облака</div>
+        <div class="card-title">🏯 Павильон Поручений Секты</div>
         <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 8px 0;">
-          Вы числитесь внешним учеником секты. Выполняйте поручения старейшин за духовные камни.
+          Выполняйте официальные поручения старейшин за духовные камни.
         </p>
         <button class="btn-primary btn-gold" style="width: 100%; margin-top: 10px;" onclick="ui.doSectDuty()">
-          <span>📜</span> Выполнить поручение секты (+20 камней)
+          <span>📜</span> Выполнить поручение (+30 камней)
         </button>
       </div>
     `;
@@ -295,7 +596,7 @@ class GameUI {
 
   doSectDuty() {
     gameEngine.addTime(1);
-    const stones = 20;
+    const stones = 30;
     gameEngine.player.inventory.stone_spirit = (gameEngine.player.inventory.stone_spirit || 0) + stones;
     gameEngine.addLog(`Вы выполнили поручение павильона миссий и получили ${stones} духовных камней.`);
     sfx.playClick();
@@ -307,6 +608,17 @@ class GameUI {
     gameEngine.addTime(1);
     const event = EXPEDITION_EVENTS[Math.floor(Math.random() * EXPEDITION_EVENTS.length)];
     sfx.playClick();
+
+    if (event.isCombat) {
+      gameEngine.startCombat(event.enemy, (result) => {
+        this.render();
+        if (result.victory) {
+          this.showToast(`Вы сокрушили ${event.enemy.name}!`);
+        }
+      });
+      this.openCombatModal();
+      return;
+    }
 
     const modal = document.getElementById('game-modal');
     const title = document.getElementById('modal-title');
@@ -372,10 +684,10 @@ class GameUI {
     title.textContent = `⚡ ${tribulation.name}`;
     body.innerHTML = `
       <p style="color: var(--lightning); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;">
-        Небеса содрогаются! Над вашей головой сгустились грозовые тучи Скорби!
+        Небеса содрогаются! Над головой сгустились грозовые тучи Скорби!
       </p>
       <p style="font-size: 0.9rem; color: var(--text-secondary);">
-        Вам предстоит выдержать ${tribulation.strikes} ударов Небесной Молнии. Используйте всю силу культивации, чтобы не быть испепеленным в пыль!
+        Вам предстоит выдержать ${tribulation.strikes} ударов Небесной Молнии. Используйте всю силу культивации!
       </p>
     `;
 
@@ -426,17 +738,17 @@ class GameUI {
       toast.id = 'toast';
       toast.style.cssText = `
         position: fixed;
-        bottom: 85px;
+        bottom: 75px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(18, 25, 36, 0.95);
+        background: rgba(18, 25, 36, 0.96);
         color: #f3f4f6;
         border: 1px solid var(--gold);
-        padding: 10px 18px;
+        padding: 9px 16px;
         border-radius: 8px;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         z-index: 300;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
         pointer-events: none;
         max-width: 90%;
         text-align: center;
@@ -456,7 +768,6 @@ class GameUI {
 let ui = null;
 window.addEventListener('DOMContentLoaded', () => {
   ui = new GameUI();
-  // Регистрация Service Worker для PWA
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW reg error', err));
   }

@@ -1,4 +1,4 @@
-/* styles.css - Xianxia Mobile-First Dark Theme */
+/* styles.css - Xianxia Mobile-First Dark Theme v2.0 */
 
 :root {
   --bg-deep: #090d13;
@@ -15,6 +15,7 @@
   --jade-glow: #34d399;
   --crimson: #ef4444;
   --lightning: #a855f7;
+  --blood: #b91c1c;
   --safe-bottom: env(safe-area-inset-bottom, 16px);
 }
 
@@ -45,10 +46,10 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(9, 13, 19, 0.92);
+  background: rgba(9, 13, 19, 0.94);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-color);
-  padding: 12px 16px;
+  padding: 10px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -58,7 +59,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--gold);
   letter-spacing: 0.5px;
@@ -71,7 +72,7 @@ body {
 
 .header-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .btn-icon {
@@ -79,8 +80,8 @@ body {
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 0.9rem;
+  padding: 5px 9px;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -94,7 +95,7 @@ body {
 /* Main Content Area */
 .main-viewport {
   flex: 1;
-  padding: 14px;
+  padding: 12px;
   padding-bottom: calc(75px + var(--safe-bottom));
   max-width: 600px;
   width: 100%;
@@ -103,7 +104,7 @@ body {
 
 .tab-pane {
   display: none;
-  animation: fadeIn 0.25s ease-out;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .tab-pane.active {
@@ -120,8 +121,8 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   position: relative;
   overflow: hidden;
@@ -131,9 +132,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 8px;
+  padding-bottom: 6px;
 }
 
 .card-title {
@@ -150,24 +151,24 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .avatar-ring {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   border: 2px solid var(--gold);
   display: flex;
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(9, 13, 19, 0.8) 100%);
-  font-size: 1.6rem;
-  box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+  font-size: 1.5rem;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .cultivator-meta h2 {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: #fff;
   font-weight: 700;
 }
@@ -181,55 +182,55 @@ body {
   background: rgba(16, 185, 129, 0.15);
   color: var(--jade);
   border: 1px solid var(--jade);
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 /* Stats Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 
 .stat-item {
-  background: rgba(9, 13, 19, 0.6);
-  padding: 8px 12px;
+  background: rgba(9, 13, 19, 0.65);
+  padding: 7px 10px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-secondary);
 }
 
 .stat-value {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .stat-value.danger { color: var(--crimson); }
 .stat-value.gold { color: var(--gold); }
 .stat-value.jade { color: var(--jade); }
 
-/* Progress Bar (Qi / Dantian) */
+/* Progress Bar (Qi & HP) */
 .progress-container {
-  margin: 14px 0;
+  margin: 10px 0;
 }
 
 .progress-header {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
-  margin-bottom: 6px;
+  font-size: 0.78rem;
+  margin-bottom: 4px;
 }
 
 .progress-bar-bg {
   width: 100%;
-  height: 14px;
+  height: 12px;
   background: rgba(0, 0, 0, 0.6);
   border-radius: 10px;
   overflow: hidden;
@@ -245,29 +246,70 @@ body {
   box-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
 }
 
+.hp-bar-fill {
+  background: linear-gradient(90deg, #991b1b 0%, #ef4444 100%) !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5) !important;
+}
+
+/* Cultivation Methods Selector */
+.methods-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.method-btn {
+  background: rgba(9, 13, 19, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.method-btn.active {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.12);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.25);
+}
+
+.method-btn h5 {
+  font-size: 0.78rem;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+
+.method-btn p {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.25;
+}
+
 /* Action Buttons */
 .action-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 14px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, #065f46 0%, #047857 100%);
   color: #fff;
   border: 1px solid var(--jade);
-  padding: 14px;
+  padding: 12px;
   border-radius: 10px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   transition: all 0.15s;
-  box-shadow: 0 4px 12px rgba(6, 95, 70, 0.4);
+  box-shadow: 0 4px 10px rgba(6, 95, 70, 0.4);
 }
 
 .btn-primary:active {
@@ -279,12 +321,14 @@ body {
   background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
   border: 1px solid var(--gold);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(180, 83, 9, 0.4);
+  box-shadow: 0 4px 10px rgba(180, 83, 9, 0.4);
 }
 
-.btn-gold:active {
-  background: #92400e;
-  transform: scale(0.96);
+.btn-crimson {
+  background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
+  border: 1px solid var(--crimson);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(185, 28, 28, 0.4);
 }
 
 .btn-auto-active {
@@ -294,8 +338,61 @@ body {
 }
 
 @keyframes pulseAuto {
-  from { box-shadow: 0 0 8px rgba(168, 85, 247, 0.4); }
-  to { box-shadow: 0 0 18px rgba(168, 85, 247, 0.8); }
+  from { box-shadow: 0 0 6px rgba(168, 85, 247, 0.4); }
+  to { box-shadow: 0 0 16px rgba(168, 85, 247, 0.8); }
+}
+
+/* Combat Screen (Modal) */
+.combat-arena {
+  background: radial-gradient(circle at center, rgba(30, 41, 59, 0.95) 0%, rgba(9, 13, 19, 0.98) 100%);
+  border: 2px solid var(--crimson);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.combat-fighters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.fighter-card {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.fighter-card.enemy {
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.fighter-card.player {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.combat-log-box {
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 10px;
+  height: 110px;
+  overflow-y: auto;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.combat-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
 /* Bottom Navigation Bar */
@@ -309,7 +406,7 @@ body {
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: space-around;
-  padding: 8px 6px calc(8px + var(--safe-bottom)) 6px;
+  padding: 6px 4px calc(6px + var(--safe-bottom)) 4px;
   z-index: 100;
 }
 
@@ -320,16 +417,16 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  font-size: 0.7rem;
-  padding: 4px 10px;
+  gap: 3px;
+  font-size: 0.68rem;
+  padding: 4px 6px;
   cursor: pointer;
   transition: all 0.2s;
   border-radius: 8px;
 }
 
 .nav-item .nav-icon {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   transition: transform 0.2s;
 }
 
@@ -343,50 +440,50 @@ body {
 
 /* Chronicle Log */
 .log-container {
-  max-height: 480px;
+  max-height: 440px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   padding-right: 4px;
 }
 
 .log-entry {
   background: rgba(9, 13, 19, 0.7);
   border-left: 3px solid var(--gold);
-  padding: 8px 12px;
+  padding: 7px 10px;
   border-radius: 0 8px 8px 0;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-primary);
 }
 
 .log-meta {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--gold);
-  margin-bottom: 2px;
+  margin-bottom: 1px;
   font-weight: 600;
 }
 
-/* Inventory & Alchemy Grid */
+/* Item & Recipe Cards */
 .item-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: rgba(9, 13, 19, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 7px;
 }
 
 .item-details h4 {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: #fff;
   margin-bottom: 2px;
 }
 
 .item-details p {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-secondary);
 }
 
@@ -394,9 +491,9 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   color: var(--gold);
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 6px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   cursor: pointer;
   font-weight: 600;
 }
@@ -406,7 +503,7 @@ body {
   color: #000;
 }
 
-/* Modal for Tribulation & Encounters */
+/* Modal */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -416,7 +513,7 @@ body {
   z-index: 200;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 16px;
 }
 
 .modal-overlay.active {
@@ -427,21 +524,21 @@ body {
   background: var(--bg-card);
   border: 2px solid var(--gold);
   border-radius: 14px;
-  padding: 20px;
+  padding: 18px;
   max-width: 480px;
   width: 100%;
   box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
   text-align: center;
-  animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: modalPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes modalPop {
-  from { transform: scale(0.85); opacity: 0; }
+  from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
 .tribulation-flash {
-  animation: lightningStrike 0.5s ease-out;
+  animation: lightningStrike 0.4s ease-out;
 }
 
 @keyframes lightningStrike {
